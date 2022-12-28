@@ -10,7 +10,7 @@ export class GoodwePowerDevice extends CachedPowerDevice {
     private ready: boolean;
 
     constructor(name: string, systemId: string) {
-        super();
+        super(30000);
 
         this.name = name;
         this.systemId = systemId;

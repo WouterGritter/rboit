@@ -9,6 +9,11 @@ export abstract class CachedPowerDevice implements PowerDevice {
 
     private cachedReading: PowerReading | undefined;
     private cachedReadingDate: number = 0;
+    private readonly maxCacheAge: number;
+
+    constructor(maxCacheAge?: number | undefined) {
+        this.maxCacheAge = maxCacheAge || POWER_DEVICE_CACHE_MAX_AGE;
+    }
 
     async getReading(): Promise<PowerReading> {
         if (this.shouldRefreshCache()) {
