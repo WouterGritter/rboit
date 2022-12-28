@@ -1,0 +1,4 @@
+Flask~=2.2.2
+PyP100~=0.1.2
+python-dotenv~=0.21.0
+pygoodwe~=0.1.2

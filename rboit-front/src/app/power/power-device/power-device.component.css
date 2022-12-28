@@ -1,0 +1,11 @@
+.device-name {
+  font-weight: bold;
+}
+
+.device-power {
+  font-size: 1rem;
+}
+
+.graph-holder {
+  margin: 0.5em;
+}
