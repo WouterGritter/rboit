@@ -18,6 +18,7 @@ class PowerRepository {
         this.devices.push(new AndledonSmartMeterPowerDevice());
         this.devices.push(new GoodwePowerDevice('solar', 'fbe5497e-f3e3-4267-978e-0e486028949e'));
         this.devices.push(new RukbunkerSolarPowerDevice());
+        this.devices.push(new TapoPowerDevice('rb-tv', '10.43.60.72'));
         this.devices.push(new TapoPowerDevice('rb-ac', '10.43.60.71'));
         this.devices.push(new TapoPowerDevice('rb-kachel-slaapkamer', '10.43.60.70'));
         this.devices.push(new TapoPowerDevice('rb-boiler', '10.43.60.69'));
