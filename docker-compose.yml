@@ -1,7 +1,7 @@
 version: '3'
 services:
   redis:
-    image: 'bitnami/redis:latest'
+    image: 'redis'
     environment:
       ALLOW_EMPTY_PASSWORD: 'yes'
   python-daemon:
@@ -12,12 +12,12 @@ services:
     environment:
       PYTHON_DAEMON: 'http://python-daemon/'
       REDIS_URL: 'redis://redis/'
-      DEVICE_CACHE_MAX_AGE: '2500'
-      DEVICE_HISTORY_LENGTH: '3600000'
-      DEVICE_HISTORY_INTERVAL: '2500'
+      DEVICE_CACHE_MAX_AGE: '2000'
+      DEVICE_HISTORY_LENGTH: '14400000'  # 4 hours
+      DEVICE_HISTORY_INTERVAL: '2000'
     ports:
     - '8081:80'  # Only neededfor local testing
-#  rboit-front:
-#    build: './rboit-front'
-#    ports:
-#    - '8080:80'
+  rboit-front:
+    build: './rboit-front'
+    ports:
+    - '8080:80'
