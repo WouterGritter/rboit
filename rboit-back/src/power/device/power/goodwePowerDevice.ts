@@ -1,9 +1,10 @@
-import {PowerReading} from "./powerDevice";
-import {CachedPowerDevice} from "./cachedPowerDevice";
+import {CachedDevice} from "../cachedDevice";
+import {PowerReading} from "./powerReading";
 
-export class GoodwePowerDevice extends CachedPowerDevice {
+export class GoodwePowerDevice extends CachedDevice<PowerReading> {
     readonly history: PowerReading[] = [];
     readonly name: string;
+    readonly type = 'power';
 
     private systemId: string;
 

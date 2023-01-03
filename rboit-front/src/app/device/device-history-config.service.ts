@@ -5,11 +5,11 @@ import {HttpClient} from "@angular/common/http";
 @Injectable({
   providedIn: 'root'
 })
-export class PowerHistoryConfigService {
-  private cachedHistoryConfig: Subject<PowerHistoryConfig> = new Subject<PowerHistoryConfig>();
+export class DeviceHistoryConfigService {
+  private cachedHistoryConfig: Subject<DeviceHistoryConfig> = new Subject<DeviceHistoryConfig>();
 
   constructor(private http: HttpClient) {
-    this.http.get<PowerHistoryConfig>('/api/power/historyConfig')
+    this.http.get<DeviceHistoryConfig>('/api/device/historyConfig')
       .subscribe(config => this.cachedHistoryConfig.next(config));
   }
 
@@ -18,7 +18,7 @@ export class PowerHistoryConfigService {
   }
 }
 
-export declare type PowerHistoryConfig = {
+export declare type DeviceHistoryConfig = {
   maxHistoryLengthMs: number;
   historyIntervalMs: number;
 }

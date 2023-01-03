@@ -1,9 +1,10 @@
-import {PowerReading} from "./powerDevice";
-import {CachedPowerDevice} from "./cachedPowerDevice";
+import {CachedDevice} from "../cachedDevice";
+import {PowerReading} from "./powerReading";
 
-export class AndledonSmartMeterPowerDevice extends CachedPowerDevice {
+export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
     readonly history: PowerReading[] = [];
     readonly name = 'andledon-smart-meter';
+    readonly type = 'power';
 
     async getActualReading(): Promise<PowerReading> {
         return this.getPhaseReadings()

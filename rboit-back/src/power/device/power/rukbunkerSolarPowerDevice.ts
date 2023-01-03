@@ -1,9 +1,10 @@
-import {PowerReading} from "./powerDevice";
-import {CachedPowerDevice} from "./cachedPowerDevice";
+import {CachedDevice} from "../cachedDevice";
+import {PowerReading} from "./powerReading";
 
-export class RukbunkerSolarPowerDevice extends CachedPowerDevice {
+export class RukbunkerSolarPowerDevice extends CachedDevice<PowerReading> {
     readonly history: PowerReading[] = [];
     readonly name = 'rb-solar';
+    readonly type = 'power';
 
     async getActualReading(): Promise<PowerReading> {
         return fetch('http://10.43.60.63/')

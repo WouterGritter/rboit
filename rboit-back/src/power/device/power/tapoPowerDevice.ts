@@ -1,9 +1,10 @@
-import {PowerReading} from "./powerDevice";
-import {CachedPowerDevice} from "./cachedPowerDevice";
+import {CachedDevice} from "../cachedDevice";
+import {PowerReading} from "./powerReading";
 
-export class TapoPowerDevice extends CachedPowerDevice {
+export class TapoPowerDevice extends CachedDevice<PowerReading> {
     readonly history: PowerReading[] = [];
     readonly name: string;
+    readonly type = 'power';
 
     private address: string;
 

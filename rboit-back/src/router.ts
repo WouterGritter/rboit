@@ -1,6 +1,6 @@
 import express from "express";
-import {power} from "./power/powerRouter";
+import {deviceRouter} from "./power/deviceRouter";
 
 export const router = express.Router();
 
-router.use('/power', power);
+router.use('/device', deviceRouter);

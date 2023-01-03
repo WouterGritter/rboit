@@ -1,11 +1,11 @@
-import {PowerDevice, PowerReading} from "./device/powerDevice";
+import {Device} from "./device/device";
 import {redisGet, redisSet} from "../redisClient";
 
-export class PowerHistoryManager {
-    private readonly devices: PowerDevice[];
-    private readonly config: PowerHistoryConfig;
+export class DeviceHistoryManager {
+    private readonly devices: Device<any>[];
+    private readonly config: DeviceHistoryConfig;
 
-    constructor(devices: PowerDevice[], config: PowerHistoryConfig) {
+    constructor(devices: Device<any>[], config: DeviceHistoryConfig) {
         this.devices = devices;
         this.config = config;
 
@@ -25,7 +25,7 @@ export class PowerHistoryManager {
         await this.storeHistories();
     }
 
-    private async updateHistory(device: PowerDevice) {
+    private async updateHistory(device: Device<any>) {
         const reading = await device.getReading()
             .catch(console.error);
 
@@ -60,11 +60,11 @@ export class PowerHistoryManager {
                 return {deviceName: device.name, history: device.history};
             });
 
-        await redisSet('power-histories', histories);
+        await redisSet('device-histories', histories);
     }
 
     private async readHistories() {
-        const histories = await redisGet<RedisHistoryEntry[]>('power-histories');
+        const histories = await redisGet<RedisHistoryEntry[]>('device-histories');
         if (histories === undefined) {
             return;
         }
@@ -88,12 +88,12 @@ export class PowerHistoryManager {
     }
 }
 
-export declare type PowerHistoryConfig = {
+export declare type DeviceHistoryConfig = {
     maxHistoryLengthMs: number;
     historyIntervalMs: number;
 }
 
 declare type RedisHistoryEntry = {
     deviceName: string;
-    history: PowerReading[];
+    history: any[];
 }

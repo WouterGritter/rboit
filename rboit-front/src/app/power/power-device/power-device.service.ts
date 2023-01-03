@@ -10,18 +10,18 @@ export class PowerDeviceService {
   constructor(private http: HttpClient) { }
 
   getNames() {
-    return this.http.get<string[]>('/api/power/names');
+    return this.http.get<string[]>('/api/device/power/names');
   }
 
   getReading(name: string) {
-    return this.http.get<PowerReading>(`/api/power/reading/${name}`)
+    return this.http.get<PowerReading>(`/api/device/power/reading/${name}`)
       .pipe(
         map(reading => this.normalizeReading(reading))
       );
   }
 
   getHistory(name: string) {
-    return this.http.get<PowerReading[]>(`/api/power/history/${name}`)
+    return this.http.get<PowerReading[]>(`/api/device/power/history/${name}`)
       .pipe(
         map(readings => readings.map(reading => this.normalizeReading(reading)))
       );

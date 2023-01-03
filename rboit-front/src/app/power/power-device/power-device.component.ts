@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {PowerDeviceService, PowerReading} from "./power-device.service";
-import {PowerHistoryConfig, PowerHistoryConfigService} from "./power-history-config.service";
+import {DeviceHistoryConfig, DeviceHistoryConfigService} from "../../device/device-history-config.service";
 
 @Component({
   selector: 'app-power-device',
@@ -32,11 +32,11 @@ export class PowerDeviceComponent implements OnInit, OnDestroy {
     },
   }
 
-  historyConfig: PowerHistoryConfig | undefined;
+  historyConfig: DeviceHistoryConfig | undefined;
 
   updateIntervalId: any | undefined;
 
-  constructor(private deviceService: PowerDeviceService, private historyConfigService: PowerHistoryConfigService) {
+  constructor(private deviceService: PowerDeviceService, private historyConfigService: DeviceHistoryConfigService) {
   }
 
   ngOnInit(): void {
