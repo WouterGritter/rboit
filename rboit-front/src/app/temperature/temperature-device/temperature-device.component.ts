@@ -98,14 +98,14 @@ export class TemperatureDeviceComponent implements OnInit, OnDestroy {
       {
         axisYType: 'primary',
         type: 'line',
-        yValueFormatString: '#.#°C',
+        yValueFormatString: '0.0°C',
         color: '#FF5C5C',
         dataPoints: history.map(reading => this.readingToDataPoint(reading, 'temperature')),
       },
       {
         axisYType: 'secondary',
         type: 'line',
-        yValueFormatString: '#.#%',
+        yValueFormatString: '0.0%',
         color: '#8A8AFF',
         dataPoints: history.map(reading => this.readingToDataPoint(reading, 'humidity')),
       }
