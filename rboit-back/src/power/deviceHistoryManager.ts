@@ -65,12 +65,19 @@ export class DeviceHistoryManager {
             }
         }
 
-        const now = new Date().getTime();
-        while (device.history.length > 0 && now - device.history[0].date.getTime() > this.config.maxHistoryLengthMs) {
-            device.history.splice(0, 1);
+        device.history.push(reading);
+
+        this.purgeOutdatedHistory(device);
+    }
+
+    private purgeOutdatedHistory(device: Device<any>, now?: Date | undefined): void {
+        if (now === undefined) {
+            now = new Date();
         }
 
-        device.history.push(reading);
+        while (device.history.length > 0 && now.getTime() - device.history[0].date.getTime() > this.config.maxHistoryLengthMs) {
+            device.history.splice(0, 1);
+        }
     }
 
     private async storeHistories() {
@@ -116,6 +123,8 @@ export class DeviceHistoryManager {
                     date: device.history[device.history.length - 1].date,
                 });
             }
+
+            this.purgeOutdatedHistory(device);
         }
     }
 }
