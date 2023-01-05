@@ -29,12 +29,8 @@ export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
         // Average the voltage
         totalVoltage /= phaseReadings.length;
 
-        // The meter provides the wrong timezone, so strip the timezone from the timestamp.
-        let timestamp = reading.timestamp;
-        timestamp = timestamp.substring(0, timestamp.length - 4);
-
         return {
-            date: new Date(timestamp),
+            date: new Date(reading.timestamp),
             voltage: totalVoltage,
             power: totalPower,
             amperage: totalAmperage,
