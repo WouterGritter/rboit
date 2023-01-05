@@ -1,0 +1,9 @@
+.meme-image {
+  min-width: 50%;
+}
+
+@media (max-width: 800px) {
+  .meme-image {
+    width: 100%;
+  }
+}
