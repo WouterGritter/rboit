@@ -113,7 +113,7 @@ export class DeviceHistoryManager {
             if (device.history.length > 0) {
                 // Insert empty history item
                 device.history.push({
-                    date: new Date(),
+                    date: device.history[device.history.length - 1].date,
                 });
             }
         }
