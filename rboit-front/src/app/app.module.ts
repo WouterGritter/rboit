@@ -17,6 +17,13 @@ import { PowerPageComponent } from './pages/power-page/power-page.component';
 import { TemperaturePageComponent } from './pages/temperature-page/temperature-page.component';
 import { TemperatureDeviceComponent } from './temperature/temperature-device/temperature-device.component';
 import { IndexPageComponent } from './pages/index-page/index-page.component';
+import {MatToolbarModule} from "@angular/material/toolbar";
+import {MatIconModule} from "@angular/material/icon";
+import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatListModule} from "@angular/material/list";
+import {MatButtonModule} from "@angular/material/button";
+import { NavigationComponent } from './navigation/navigation.component';
+import { RandomMemeComponent } from './random-meme/random-meme.component';
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 @NgModule({
@@ -29,6 +36,8 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     TemperaturePageComponent,
     TemperatureDeviceComponent,
     IndexPageComponent,
+    NavigationComponent,
+    RandomMemeComponent,
   ],
   imports: [
     BrowserModule,
@@ -38,7 +47,12 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     MatTabsModule,
     NgApexchartsModule,
     HttpClientModule,
-    MatGridListModule
+    MatGridListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
