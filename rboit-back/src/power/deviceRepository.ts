@@ -5,6 +5,7 @@ import {AndledonSmartMeterPowerDevice} from "./device/power/andledonSmartMeterPo
 import {RukbunkerSolarPowerDevice} from "./device/power/rukbunkerSolarPowerDevice";
 import {EspTemperatureDevice} from "./device/temperature/espTemperatureDevice";
 import {GoodwePowerDevice} from "./device/power/goodwePowerDevice";
+import {GoveeTemperatureDevice} from "./device/temperature/goveeTemperatureDevice";
 
 class DeviceRepository {
 
@@ -27,6 +28,7 @@ class DeviceRepository {
 
         // Temperature devices
         this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.76'));
+        this.devices.push(new GoveeTemperatureDevice('rb-temperature', 'A4:C1:38:10:4F:D9'));
 
         let historyManager = new DeviceHistoryManager(this.devices, this.historyConfig);
         historyManager.startTimer();
