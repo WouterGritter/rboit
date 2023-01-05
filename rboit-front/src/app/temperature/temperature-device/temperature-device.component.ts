@@ -64,7 +64,10 @@ export class TemperatureDeviceComponent implements OnInit, OnDestroy {
   updateReading() {
     this.deviceService.getReading(this.name)
       .subscribe(reading => {
-        const title = `${this.name} · ${reading.temperature.toFixed(1)}°C / ${reading.humidity.toFixed(0)}%`;
+        let title = this.name;
+        if (reading.temperature !== undefined && reading.humidity !== undefined) {
+          title = `${this.name} · ${reading.temperature.toFixed(1)}°C / ${reading.humidity.toFixed(0)}%`;
+        }
 
         if (this.historyConfig) {
           const now = new Date().getTime();

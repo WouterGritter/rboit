@@ -36,7 +36,11 @@ export class TemperatureDeviceService {
     return reading;
   }
 
-  private round(num: number, digits: number): number {
+  private round(num: number | undefined, digits: number): number | undefined {
+    if (num === undefined) {
+      return undefined;
+    }
+
     let rounder = Math.pow(10, digits);
     return Math.round(num * rounder) / rounder;
   }
@@ -44,6 +48,6 @@ export class TemperatureDeviceService {
 
 export declare type TemperatureReading = {
   date: Date;
-  temperature: number;
-  humidity: number;
+  temperature?: number;
+  humidity?: number;
 }
