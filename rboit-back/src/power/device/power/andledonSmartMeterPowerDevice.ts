@@ -7,42 +7,86 @@ export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
     readonly type = 'power';
 
     async getActualReading(): Promise<PowerReading> {
-        return this.getPhaseReadings()
+        return fetch('http://10.43.0.10:8080/')
+            .then(response => response.json() as Promise<AndledonSmartMeterReading>)
             .then(readings => this.toPowerReading(readings));
     }
 
-    async getPhaseReadings(): Promise<PhaseReading[]> {
-        return fetch('https://powerdashboard.woutergritter.me/api/power')
-            .then(response => response.json() as Promise<PhaseReading[]>);
-    }
+    private toPowerReading(reading: AndledonSmartMeterReading): PowerReading {
+        let totalVoltage = 0, totalPower = 0, totalAmperage = 0;
 
-    private toPowerReading(phaseReadings: PhaseReading[]): PowerReading {
-        let voltage = phaseReadings
-            .map(reading => reading.voltage)
-            .reduce((a, b) => a + b, 0);
-        voltage /= phaseReadings.length;
+        const phaseReadings: CurrentPhaseReading[] = [reading.current_readings.L1, reading.current_readings.L2, reading.current_readings.L3];
+        for (const phaseReading of phaseReadings) {
+            let voltage = phaseReading.voltage;
+            let power = (phaseReading.power_delivery - phaseReading.power_redelivery) * 1000;
+            let amperage = power / voltage;
 
-        let amperage = phaseReadings
-            .map(reading => reading.amperage)
-            .reduce((a, b) => a + b, 0);
+            totalVoltage += voltage;
+            totalPower += power;
+            totalAmperage += amperage;
+        }
 
-        let power = phaseReadings
-            .map(reading => reading.power)
-            .reduce((a, b) => a + b, 0);
+        // Average the voltage
+        totalVoltage /= phaseReadings.length;
+
+        // The meter provides the wrong timezone, so strip the timezone from the timestamp.
+        let timestamp = reading.timestamp;
+        timestamp = timestamp.substring(0, timestamp.length - 4);
 
         return {
-            date: new Date(),
-            voltage,
-            power,
-            amperage
+            date: new Date(timestamp),
+            voltage: totalVoltage,
+            power: totalPower,
+            amperage: totalAmperage,
         };
     }
 }
 
-export interface PhaseReading {
-    name: string;
-    voltage: number;
+type CurrentPhaseReading = {
     amperage: number;
-    power: number;
-    fuse: number;
+    power_delivery: number;
+    power_redelivery: number;
+    voltage: number;
+}
+
+type AndledonSmartMeterReading = {
+    equipment_identifier: string;
+    header: string;
+    footer: string;
+    version: string;
+    timestamp: string;
+    text_message: string;
+    current_readings: {
+        L1: CurrentPhaseReading;
+        L2: CurrentPhaseReading;
+        L3: CurrentPhaseReading;
+        total: {
+            power_delivery: number;
+            power_redelivery: number;
+        }
+    }
+    current_tariff: 'high' | 'low';
+    delivery: {
+        high_tariff: number;
+        low_tariff: number;
+    };
+    redelivery: {
+        high_tariff: number;
+        low_tariff: number;
+    };
+    power_failures: {
+        event_log: [
+            {
+                length: number;
+                timestamp: string;
+            }
+        ];
+        total: number;
+        total_long: number;
+    };
+    voltage_sags: {
+        L1: number;
+        L2: number;
+        L3: number;
+    }
 }
