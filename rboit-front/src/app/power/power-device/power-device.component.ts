@@ -110,7 +110,7 @@ export class PowerDeviceComponent implements OnInit, OnDestroy {
   }
 
   private readingToDataPoint(reading: PowerReading): any {
-    let toolTipContent = `${reading.date.getHours()}:${reading.date.getMinutes()}:${reading.date.getSeconds()}`;
+    let toolTipContent = `${String(reading.date.getHours()).padStart(2, '0')}:${String(reading.date.getMinutes()).padStart(2, '0')}:${String(reading.date.getSeconds()).padStart(2, '0')}`;
 
     if (reading.power !== undefined) toolTipContent += ` - ${reading.power.toFixed(1)}W`;
     if (reading.voltage !== undefined) toolTipContent += ` / ${reading.voltage.toFixed(1)}V`;
