@@ -22,7 +22,6 @@ export class EspTemperatureDevice extends CachedDevice<TemperatureReading> {
     }
 
     private toTemperatureReading(reading: EspTemperatureReading): TemperatureReading {
-        console.log(reading);
         return {
             date: new Date(),
             temperature: reading.temperature,

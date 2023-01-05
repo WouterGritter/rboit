@@ -1,6 +1,6 @@
-FROM node:18 as builder
+FROM node:18 AS builder
 
-WORKDIR /builder
+WORKDIR /build
 
 COPY package.json ./
 RUN npm install
@@ -8,7 +8,7 @@ RUN npm install
 COPY tsconfig.json ./
 COPY src ./src
 
-RUN npm run build
+RUN npm run build --prod
 
 FROM node:18
 
@@ -17,6 +17,6 @@ WORKDIR /app
 COPY package.json ./
 RUN npm install --production
 
-COPY --from=builder /builder/dist ./dist
+COPY --from=builder /build/dist ./dist
 
 CMD [ "npm", "run", "start" ]
