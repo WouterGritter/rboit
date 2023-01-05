@@ -13,6 +13,10 @@ import { PowerDeviceGroupComponent } from './power/power-device-group/power-devi
 
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
 import {MatGridListModule} from "@angular/material/grid-list";
+import { PowerPageComponent } from './pages/power-page/power-page.component';
+import { TemperaturePageComponent } from './pages/temperature-page/temperature-page.component';
+import { TemperatureDeviceComponent } from './temperature/temperature-device/temperature-device.component';
+import { IndexPageComponent } from './pages/index-page/index-page.component';
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 @NgModule({
@@ -21,6 +25,10 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     PowerDeviceComponent,
     PowerDeviceGroupComponent,
     CanvasJSChart,
+    PowerPageComponent,
+    TemperaturePageComponent,
+    TemperatureDeviceComponent,
+    IndexPageComponent,
   ],
   imports: [
     BrowserModule,

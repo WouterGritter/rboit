@@ -71,6 +71,10 @@ export class DeviceHistoryManager {
 
         for (let entry of histories) {
             let device = this.devices.find(device => device.name === entry.deviceName)
+            if (device === undefined) {
+                console.log(`Read history of device ${entry.deviceName}, but this device is not loaded anymore. The history will be lost!`);
+                continue;
+            }
 
             device.history.splice(0, device.history.length);
             for (let i = 0; i < entry.history.length; i++) {

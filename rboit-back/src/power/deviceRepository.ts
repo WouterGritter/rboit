@@ -3,6 +3,7 @@ import {TapoPowerDevice} from "./device/power/tapoPowerDevice";
 import {DeviceHistoryConfig, DeviceHistoryManager} from "./deviceHistoryManager";
 import {AndledonSmartMeterPowerDevice} from "./device/power/andledonSmartMeterPowerDevice";
 import {RukbunkerSolarPowerDevice} from "./device/power/rukbunkerSolarPowerDevice";
+import {EspTemperatureDevice} from "./device/temperature/espTemperatureDevice";
 import {GoodwePowerDevice} from "./device/power/goodwePowerDevice";
 
 class DeviceRepository {
@@ -23,6 +24,9 @@ class DeviceRepository {
         this.devices.push(new TapoPowerDevice('rb-ac', '10.43.60.71'));
         this.devices.push(new TapoPowerDevice('rb-kachel-slaapkamer', '10.43.60.70'));
         this.devices.push(new TapoPowerDevice('rb-boiler', '10.43.60.69'));
+
+        // Temperature devices
+        this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.76'));
 
         let historyManager = new DeviceHistoryManager(this.devices, this.historyConfig);
         historyManager.startTimer();

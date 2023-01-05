@@ -17,7 +17,7 @@ services:
       DEVICE_HISTORY_INTERVAL: '2000'
     ports:
     - '8081:80'  # Only neededfor local testing
-  rboit-front:
-    build: './rboit-front'
-    ports:
-    - '8080:80'
+#  rboit-front:
+#    build: './rboit-front'
+#    ports:
+#    - '8080:80'
