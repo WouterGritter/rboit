@@ -52,9 +52,9 @@ export class TemperatureDeviceComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.updateIntervalId) {
-      clearInterval(this.updateIntervalId);
-    }
+    // if (this.updateIntervalId) {
+    //   clearInterval(this.updateIntervalId);
+    // }
   }
 
   getChartInstance(chart: object) {
