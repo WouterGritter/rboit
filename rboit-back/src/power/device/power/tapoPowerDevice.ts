@@ -8,26 +8,14 @@ export class TapoPowerDevice extends CachedDevice<PowerReading> {
 
     private address: string;
 
-    private ready: boolean;
-
     constructor(name: string, address: string) {
         super();
 
         this.name = name;
         this.address = address;
-
-        fetch(`${process.env.PYTHON_DAEMON}/tapo/${this.address}`)
-            .then(() => {
-                this.ready = true;
-                console.log(`${this.name} is now ready.`);
-            });
     }
 
     async getActualReading(): Promise<PowerReading> {
-        if (!this.ready) {
-            return Promise.reject(`Tapo device ${this.name} not ready yet.`);
-        }
-
         return fetch(`${process.env.PYTHON_DAEMON}/tapo/${this.address}`)
             .then(response => response.json() as Promise<TapoPowerReading>)
             .then(reading => this.toPowerReading(reading));

@@ -8,37 +8,14 @@ export class GoodwePowerDevice extends CachedDevice<PowerReading> {
 
     private systemId: string;
 
-    private ready: boolean;
-
     constructor(name: string, systemId: string) {
         super(300000);
 
         this.name = name;
         this.systemId = systemId;
-
-        this.performReadyRequest();
-    }
-
-    private performReadyRequest(): void {
-        fetch(`${process.env.PYTHON_DAEMON}/goodwe/${this.systemId}`)
-            .then(response => response.json() as Promise<GoodwePowerReading>)
-            .then(reading => this.toPowerReading(reading))
-            .then(() => {
-                this.ready = true;
-                console.log(`${this.name} is now ready.`);
-            })
-            .catch(reason => {
-                console.log(`Goodwe error: ${reason}`);
-                console.log('Retrying in 5 seconds.');
-                setTimeout(() => this.performReadyRequest(), 5000);
-            });
     }
 
     async getActualReading(): Promise<PowerReading> {
-        if (!this.ready) {
-            return Promise.reject(`Goodwe device ${this.name} not ready yet.`);
-        }
-
         return fetch(`${process.env.PYTHON_DAEMON}/goodwe/${this.systemId}`)
             .then(response => response.json() as Promise<GoodwePowerReading>)
             .then(reading => this.toPowerReading(reading));

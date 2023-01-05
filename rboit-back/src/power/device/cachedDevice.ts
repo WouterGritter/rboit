@@ -8,15 +8,38 @@ export abstract class CachedDevice<T> implements Device<T> {
     readonly abstract name: string;
     readonly abstract type: 'power' | 'temperature';
 
+    private ready: boolean = false;
     private cachedReading: T | undefined;
     private cachedReadingDate: number = 0;
     private readonly maxCacheAge: number;
 
     constructor(maxCacheAge?: number | undefined) {
         this.maxCacheAge = maxCacheAge || DEVICE_CACHE_MAX_AGE;
+
+        setTimeout(() => this.performReadyRequest(), 500);
+    }
+
+    private performReadyRequest(): void {
+        this.getActualReading()
+            .then(reading => {
+                this.cachedReading = reading;
+                this.cachedReadingDate = new Date().getTime();
+
+                this.ready = true;
+                console.log(`Device ${this.name} is now ready.`);
+            })
+            .catch(reason => {
+                console.log(`Error on first request of device ${this.name}: ${reason}`);
+                console.log('Retrying in 5 seconds.');
+                setTimeout(() => this.performReadyRequest(), 5000);
+            });
     }
 
     async getReading(): Promise<T> {
+        if (!this.ready) {
+            return Promise.reject(`Device ${this.name} not ready yet.`);
+        }
+
         if (this.shouldRefreshCache()) {
             try{
                 this.cachedReading = await this.getActualReading();
