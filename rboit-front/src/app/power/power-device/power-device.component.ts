@@ -121,7 +121,6 @@ export class PowerDeviceComponent implements OnInit, OnDestroy {
       y: reading.power,
       markerSize: 1,
       toolTipContent: toolTipContent,
-      reading: reading,
     };
   }
 }

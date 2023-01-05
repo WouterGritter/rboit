@@ -39,8 +39,7 @@ export class TapoPowerDevice extends CachedDevice<PowerReading> {
         }
 
         return {
-            // date: new Date(reading.result.local_time),
-            date: new Date(),
+            date: new Date(reading.result.local_time),
             power: reading.result.current_power / 1000.0,
         }
     }

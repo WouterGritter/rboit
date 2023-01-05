@@ -1,6 +1,9 @@
 import {Device} from "./device/device";
 import {redisGet, redisSet} from "../redisClient";
 
+const STORE_HISTORY = process.env.STORE_HISTORY === 'true';
+console.log(`STORE_HISTORY=${STORE_HISTORY}`);
+
 export class DeviceHistoryManager {
     private readonly devices: Device<any>[];
     private readonly config: DeviceHistoryConfig;
@@ -26,16 +29,32 @@ export class DeviceHistoryManager {
     }
 
     private async updateHistory(device: Device<any>) {
-        const reading = await device.getReading()
-            .catch(console.error);
+        if (device.history === undefined) {
+            // Device does not support history.
+            return;
+        }
+
+        let reading;
+        try{
+            reading = await device.getReading();
+        }catch(e) {
+            console.error(e);
+            return;
+        }
 
         if (!reading) {
+            // No new reading.
+            return;
+        }
+
+        if (reading.date === undefined) {
+            console.log(`Warning! Reading of device ${device.name} does not have a date attribute. Please add this to keep track of the reading history.`);
             return;
         }
 
         if (device.history.length > 0) {
             const previousReading = device.history[device.history.length - 1];
-            if (previousReading === reading) {
+            if (previousReading.date.getTime() === previousReading.date.getTime()) {
                 // No new reading..
                 return;
             }
@@ -55,7 +74,12 @@ export class DeviceHistoryManager {
     }
 
     private async storeHistories() {
+        if (!STORE_HISTORY) {
+            return;
+        }
+
         const histories: RedisHistoryEntry[] = this.devices
+            .filter(device => device.history !== undefined && device.history.length > 0)
             .map(device => {
                 return {deviceName: device.name, history: device.history};
             });
@@ -64,6 +88,10 @@ export class DeviceHistoryManager {
     }
 
     private async readHistories() {
+        if (!STORE_HISTORY) {
+            return;
+        }
+
         const histories = await redisGet<RedisHistoryEntry[]>('device-histories');
         if (histories === undefined) {
             return;
@@ -78,7 +106,7 @@ export class DeviceHistoryManager {
 
             device.history.splice(0, device.history.length);
             for (let i = 0; i < entry.history.length; i++) {
-                entry.history[i].date = new Date(entry.history[i].date);
+                entry.history[i].date = new Date(entry.history[i].date); // Dates are stored as string...
                 device.history[i] = entry.history[i];
             }
 

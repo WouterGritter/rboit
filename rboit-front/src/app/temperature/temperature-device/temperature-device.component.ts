@@ -22,14 +22,10 @@ export class TemperatureDeviceComponent implements OnInit, OnDestroy {
     },
     data: [] as any[],
     axisY: {
-      minimum: 10,
-      maximum: 25,
       suffix: '°C',
       labelFontColor: '#FF2E2E',
     },
     axisY2: {
-      minimum: 0,
-      maximum: 100,
       suffix: '%',
       labelFontColor: '#5C5CFF',
     },
@@ -123,7 +119,6 @@ export class TemperatureDeviceComponent implements OnInit, OnDestroy {
       x: reading.date,
       y: reading[value],
       markerSize: 1,
-      reading: reading,
     };
   }
 }
