@@ -54,7 +54,7 @@ export class DeviceHistoryManager {
 
         if (device.history.length > 0) {
             const previousReading = device.history[device.history.length - 1];
-            if (previousReading.date.getTime() === previousReading.date.getTime()) {
+            if (reading.date.getTime() === previousReading.date.getTime()) {
                 // No new reading..
                 return;
             }
