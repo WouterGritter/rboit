@@ -12,9 +12,9 @@ services:
     environment:
       PYTHON_DAEMON: 'http://python-daemon/'
       REDIS_URL: 'redis://redis/'
-      DEVICE_CACHE_MAX_AGE: '2000'
-      DEVICE_HISTORY_LENGTH: '14400000'  # 4 hours
-      DEVICE_HISTORY_INTERVAL: '2000'
+      DEVICE_CACHE_MAX_AGE: '2500'
+      DEVICE_HISTORY_LENGTH: '86400000'  # 24 hours
+      DEVICE_HISTORY_INTERVAL: '5000'
     ports:
     - '8081:80'  # Only neededfor local testing
   rboit-front:
