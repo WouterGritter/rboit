@@ -11,7 +11,7 @@ export class GoodwePowerDevice extends CachedDevice<PowerReading> {
     private ready: boolean;
 
     constructor(name: string, systemId: string) {
-        super(30000);
+        super(300000);
 
         this.name = name;
         this.systemId = systemId;
@@ -57,7 +57,7 @@ export class GoodwePowerDevice extends CachedDevice<PowerReading> {
         }
 
         return {
-            date: new Date(),
+            date: new Date(reading.inverter.last_refresh_time),
             voltage,
             amperage,
             power,
@@ -70,5 +70,6 @@ declare type GoodwePowerReading = {
         output_voltage: string;
         output_current: string;
         output_power: string;
+        last_refresh_time: string;
     };
 };
