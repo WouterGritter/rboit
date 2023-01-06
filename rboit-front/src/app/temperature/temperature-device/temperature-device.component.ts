@@ -75,7 +75,10 @@ export class TemperatureDeviceComponent implements OnInit, OnDestroy {
             this.historyReadings.splice(0, 1);
           }
 
-          this.historyReadings.push(reading);
+          const lastReading = this.historyReadings[this.historyReadings.length - 1];
+          if (reading.date.getTime() > lastReading.date.getTime()) {
+            this.historyReadings.push(reading);
+          }
         }
 
         this.renderChart(title, this.historyReadings);
