@@ -26,11 +26,12 @@ export class EspTemperatureDevice extends CachedDevice<TemperatureReading> {
             date: new Date(reading.epochTime * 1000),
             temperature: reading.temperature,
             humidity: reading.humidity,
+            source: reading,
         };
     }
 }
 
-type EspTemperatureReading = {
+export type EspTemperatureReading = {
     temperature: number;
     humidity: number;
     epochTime: number;

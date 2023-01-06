@@ -52,6 +52,12 @@ export class DeviceHistoryManager {
             return;
         }
 
+        // Remove source attribute, which can be quite big
+        // Clone object, because the reading could be cached and affect future readings which might require the source.
+        reading = JSON.parse(JSON.stringify(reading));
+        reading.date = new Date(reading.date);
+        delete reading.source;
+
         if (device.history.length > 0) {
             const previousReading = device.history[device.history.length - 1];
             if (reading.date.getTime() === previousReading.date.getTime()) {

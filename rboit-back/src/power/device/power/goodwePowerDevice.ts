@@ -38,11 +38,12 @@ export class GoodwePowerDevice extends CachedDevice<PowerReading> {
             voltage,
             amperage,
             power,
+            source: reading,
         }
     }
 }
 
-declare type GoodwePowerReading = {
+export declare type GoodwePowerReading = {
     inverter: {
         output_voltage: string;
         output_current: string;

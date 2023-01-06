@@ -34,18 +34,19 @@ export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
             voltage: totalVoltage,
             power: totalPower,
             amperage: totalAmperage,
+            source: reading,
         };
     }
 }
 
-type CurrentPhaseReading = {
+export type CurrentPhaseReading = {
     amperage: number;
     power_delivery: number;
     power_redelivery: number;
     voltage: number;
-}
+};
 
-type AndledonSmartMeterReading = {
+export type AndledonSmartMeterReading = {
     equipment_identifier: string;
     header: string;
     footer: string;
@@ -59,8 +60,8 @@ type AndledonSmartMeterReading = {
         total: {
             power_delivery: number;
             power_redelivery: number;
-        }
-    }
+        };
+    };
     current_tariff: 'high' | 'low';
     delivery: {
         high_tariff: number;
@@ -84,5 +85,5 @@ type AndledonSmartMeterReading = {
         L1: number;
         L2: number;
         L3: number;
-    }
-}
+    };
+};

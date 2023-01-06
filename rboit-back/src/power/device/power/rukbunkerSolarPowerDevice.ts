@@ -21,13 +21,14 @@ export class RukbunkerSolarPowerDevice extends CachedDevice<PowerReading> {
         return {
             date: new Date(),
             power: -power,
+            source: reading,
         };
     }
 }
 
-interface RukbunkerSolarReading {
+export declare type RukbunkerSolarReading = {
     pulseCount: number;
     wattHours: number;
     lastPulseDurationMs: number;
     calculatedWattage: number;
-}
+};
