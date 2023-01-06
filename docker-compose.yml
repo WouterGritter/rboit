@@ -23,7 +23,7 @@ services:
       REDIS_URL: 'redis://redis/'
       DEVICE_CACHE_MAX_AGE: '1900'
       DEVICE_HISTORY_LENGTH: '86400000'  # 24 hours
-      DEVICE_HISTORY_INTERVAL: '10000'
+      DEVICE_HISTORY_INTERVAL: '20000'
       CLIENT_HISTORY_INTERVAL: '2000'
       STORE_HISTORY: 'true'
     ports:
