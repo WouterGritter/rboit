@@ -12,6 +12,8 @@ services:
   python-daemon:
     build: './python-daemon'
     env_file: '.env'
+    ports:
+    - '8082:80'  # Only needed for development
 
   rboit-back:
     build: './rboit-back'
@@ -25,7 +27,7 @@ services:
       CLIENT_HISTORY_INTERVAL: '1000'
       STORE_HISTORY: 'true'
     ports:
-    - '8081:80'  # Only neededfor local testing
+    - '8081:80'  # Only needed for development
 
   rboit-front:
     build: './rboit-front'
