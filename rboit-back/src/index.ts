@@ -4,6 +4,7 @@ dotenv.config();
 
 import express from "express";
 import {router} from "./router";
+import {startGoveeBatteryMonitor} from "./goveeBatteryMonitor";
 
 
 const app = express();
@@ -14,3 +15,5 @@ app.use(router);
 app.listen(port, () => {
     console.log(`Listening on http://0.0.0.0:${port}`);
 });
+
+startGoveeBatteryMonitor();
