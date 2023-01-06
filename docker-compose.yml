@@ -17,6 +17,7 @@ services:
 
   rboit-back:
     build: './rboit-back'
+    env_file: '.env'
     environment:
       TZ: 'Europe/Amsterdam'
       PYTHON_DAEMON: 'http://python-daemon/'
