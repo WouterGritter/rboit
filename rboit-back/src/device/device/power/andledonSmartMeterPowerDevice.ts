@@ -1,10 +1,11 @@
 import {CachedDevice} from "../cachedDevice";
 import {PowerReading} from "./powerReading";
+import {DeviceType} from "../device";
 
 export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
     readonly history: PowerReading[] = [];
-    readonly name = 'andledon-smart-meter';
-    readonly type = 'power';
+    readonly name: string = 'andledon-smart-meter';
+    readonly type: DeviceType = 'power';
 
     async getActualReading(): Promise<PowerReading> {
         return fetch('http://10.43.0.10:8080/')

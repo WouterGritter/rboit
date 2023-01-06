@@ -1,4 +1,4 @@
-import {Device} from "./device";
+import {Device, DeviceType} from "./device";
 
 const DEVICE_CACHE_MAX_AGE = parseInt(process.env.DEVICE_CACHE_MAX_AGE);
 console.log(`DEVICE_CACHE_MAX_AGE=${DEVICE_CACHE_MAX_AGE}`);
@@ -6,7 +6,7 @@ console.log(`DEVICE_CACHE_MAX_AGE=${DEVICE_CACHE_MAX_AGE}`);
 export abstract class CachedDevice<T> implements Device<T> {
     readonly abstract history: T[];
     readonly abstract name: string;
-    readonly abstract type: 'power' | 'temperature';
+    readonly abstract type: DeviceType;
 
     private ready: boolean = false;
     private fetching: boolean = false;

@@ -1,4 +1,4 @@
-import {Device} from "./device/device";
+import {Device, DeviceType} from "./device/device";
 import {TapoPowerDevice} from "./device/power/tapoPowerDevice";
 import {DeviceHistoryConfig, DeviceHistoryManager} from "./deviceHistoryManager";
 import {AndledonSmartMeterPowerDevice} from "./device/power/andledonSmartMeterPowerDevice";
@@ -39,12 +39,12 @@ class DeviceRepository {
         return this.devices;
     }
 
-    getDevices(type: string): Device<any>[] {
+    getDevices(type: DeviceType): Device<any>[] {
         return this.devices
             .filter(d => d.type === type);
     }
 
-    findDevice<T>(name: string, type: string): Device<T> {
+    findDevice<T>(name: string, type: DeviceType): Device<T> {
         return this.devices
             .find(d => d.name === name && d.type === type);
     }

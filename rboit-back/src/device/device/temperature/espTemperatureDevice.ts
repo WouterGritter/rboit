@@ -1,10 +1,11 @@
 import {TemperatureReading} from "./temperatureReading";
 import {CachedDevice} from "../cachedDevice";
+import {DeviceType} from "../device";
 
 export class EspTemperatureDevice extends CachedDevice<TemperatureReading> {
     readonly history: TemperatureReading[] = [];
     readonly name: string;
-    readonly type = 'temperature';
+    readonly type: DeviceType = 'temperature';
 
     private readonly address: string;
 

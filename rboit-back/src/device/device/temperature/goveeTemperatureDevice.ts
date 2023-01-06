@@ -1,11 +1,12 @@
 import {CachedDevice} from "../cachedDevice";
 import {TemperatureReading} from "./temperatureReading";
+import {DeviceType} from "../device";
 
 export class GoveeTemperatureDevice extends CachedDevice<TemperatureReading> {
     readonly history: TemperatureReading[] = [];
 
     readonly name: string;
-    readonly type = 'temperature';
+    readonly type: DeviceType = 'temperature';
 
     private readonly address: string;
 

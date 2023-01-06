@@ -1,6 +1,8 @@
+export declare type DeviceType = 'power' | 'temperature';
+
 export interface Device<T> {
     readonly name: string;
-    readonly type: 'power' | 'temperature';
+    readonly type: DeviceType;
     readonly history: T[];
 
     getReading(): Promise<T>;

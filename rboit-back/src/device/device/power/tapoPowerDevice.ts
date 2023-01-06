@@ -1,10 +1,11 @@
 import {CachedDevice} from "../cachedDevice";
 import {PowerReading} from "./powerReading";
+import {DeviceType} from "../device";
 
 export class TapoPowerDevice extends CachedDevice<PowerReading> {
     readonly history: PowerReading[] = [];
     readonly name: string;
-    readonly type = 'power';
+    readonly type: DeviceType = 'power';
 
     private address: string;
 
