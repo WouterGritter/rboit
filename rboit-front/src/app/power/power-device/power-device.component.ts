@@ -45,7 +45,7 @@ export class PowerDeviceComponent implements OnInit, OnDestroy {
     this.historyConfigService.getHistoryConfig().subscribe(config => {
       this.historyConfig = config;
 
-      this.updateIntervalId = setInterval(() => this.updateReading(), this.historyConfig.historyIntervalMs);
+      this.updateIntervalId = setInterval(() => this.updateReading(), this.historyConfig.clientHistoryIntervalMs);
     });
 
     this.initializeHistory()

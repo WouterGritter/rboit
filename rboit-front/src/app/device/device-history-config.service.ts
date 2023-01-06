@@ -17,4 +17,5 @@ export class DeviceHistoryConfigService {
 export declare type DeviceHistoryConfig = {
   maxHistoryLengthMs: number;
   historyIntervalMs: number;
+  clientHistoryIntervalMs: number;
 }

@@ -132,6 +132,7 @@ export class DeviceHistoryManager {
 export declare type DeviceHistoryConfig = {
     maxHistoryLengthMs: number;
     historyIntervalMs: number;
+    clientHistoryIntervalMs: number;
 }
 
 declare type RedisHistoryEntry = {

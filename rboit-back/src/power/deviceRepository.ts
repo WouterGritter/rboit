@@ -12,6 +12,7 @@ class DeviceRepository {
     private readonly historyConfig: DeviceHistoryConfig = {
         maxHistoryLengthMs: parseInt(process.env.DEVICE_HISTORY_LENGTH),
         historyIntervalMs: parseInt(process.env.DEVICE_HISTORY_INTERVAL),
+        clientHistoryIntervalMs: parseInt(process.env.CLIENT_HISTORY_INTERVAL),
     };
 
     private readonly devices: Device<any>[] = [];
