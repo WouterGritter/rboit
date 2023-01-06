@@ -104,8 +104,6 @@ export class DeviceHistoryManager {
             return;
         }
 
-        this.cleanUpRedisHistory(histories);
-
         for (let entry of histories) {
             let device = this.devices.find(device => device.name === entry.deviceName)
             if (device === undefined) {
@@ -127,30 +125,6 @@ export class DeviceHistoryManager {
             }
 
             this.purgeOutdatedHistory(device);
-        }
-    }
-
-    private cleanUpRedisHistory(entries: RedisHistoryEntry[]): void {
-        let total = 0;
-        let removed = 0;
-
-        for (let entry of entries) {
-            total += entry.history.length;
-            for (let i = 1; i < entry.history.length; i++) {
-                let prev = entry.history[i - 1];
-                let cur = entry.history[i];
-
-                let timeDifference = new Date(cur.date).getTime() - new Date(prev.date).getTime();
-                if (timeDifference > this.config.historyIntervalMs) {
-                    entry.history.splice(i, 1);
-                    i--;
-                    removed++;
-                }
-            }
-        }
-
-        if (removed > 0) {
-            console.log(`cleanUpRedisHistory(): total=${total}, removed=${removed}`);
         }
     }
 }
