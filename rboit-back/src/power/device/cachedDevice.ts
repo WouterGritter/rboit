@@ -9,6 +9,7 @@ export abstract class CachedDevice<T> implements Device<T> {
     readonly abstract type: 'power' | 'temperature';
 
     private ready: boolean = false;
+    private fetching: boolean = false;
     private cachedReading: T | undefined;
     private cachedReadingDate: number = 0;
     private readonly maxCacheAge: number;
@@ -41,13 +42,21 @@ export abstract class CachedDevice<T> implements Device<T> {
         }
 
         if (this.shouldRefreshCache()) {
+            if (this.fetching) {
+                console.log(`Wanted to refresh cache for device ${this.name}, but we are already fetching. Sending cached reading.`);
+                return Promise.resolve(this.cachedReading);
+            }
+
+            this.fetching = true;
             try{
                 this.cachedReading = await this.getActualReading();
             }catch(e) {
+                this.fetching = false;
                 return Promise.reject(e);
             }
 
             this.cachedReadingDate = new Date().getTime();
+            this.fetching = false;
         }
 
         if (this.cachedReading === undefined) {
