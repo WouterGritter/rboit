@@ -43,7 +43,7 @@ export abstract class CachedDevice<T> implements Device<T> {
 
         if (this.shouldRefreshCache()) {
             if (this.fetching) {
-                console.log(`Wanted to refresh cache for device ${this.name}, but we are already fetching. Sending cached reading.`);
+                // TODO: Maybe somehow wait and return the result of the pending fetch?
                 return Promise.resolve(this.cachedReading);
             }
 
