@@ -1,4 +1,4 @@
-docker-compose down
 git pull
 docker-compose build
+docker-compose down
 docker-compose up -d
