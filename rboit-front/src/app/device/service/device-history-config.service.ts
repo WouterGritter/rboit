@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
+import {bindToLocalStorage} from "../../localStorageHelpers";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,8 @@ export class DeviceHistoryConfigService {
   constructor(private http: HttpClient) {
     this.http.get<RemoteDeviceHistoryConfig>('/api/device/historyConfig')
       .subscribe(config => this.remoteHistoryConfig.next(config));
+
+    bindToLocalStorage(this.localHistoryLength, 'localHistoryLength');
   }
 
   getRemoteHistoryConfig() {
