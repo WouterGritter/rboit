@@ -1,3 +1,3 @@
 <div class="graph-holder">
-  <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', 'aspect-ratio': '3  / 1'}" (chartInstance)="getChartInstance($event)"></canvasjs-chart>
+  <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', 'aspect-ratio': calculateChartAspectRatio()}" (chartInstance)="setChartInstance($event)"></canvasjs-chart>
 </div>

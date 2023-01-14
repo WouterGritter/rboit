@@ -2,6 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from "@angular/material/sidenav";
 import {map, Observable, shareReplay} from "rxjs";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
+import {IsHandsetService} from "../is-handset.service";
 
 @Component({
   selector: 'app-navigation',
@@ -17,25 +18,14 @@ export class NavigationComponent implements OnInit {
     { title: 'Temperature', icon: 'dashboard', routerLink: 'temperature' },
   ];
 
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
-    .pipe(
-      map(result => result.matches),
-      shareReplay()
-    );
-
-  isHandset: boolean = false;
-
-  constructor(private breakpointObserver: BreakpointObserver) {
+  constructor(public isHandsetService: IsHandsetService) {
   }
 
   ngOnInit(): void {
-    this.isHandset$.subscribe(bool => {
-      this.isHandset = bool;
-    });
   }
 
   linkClicked(): void {
-    if (this.isHandset) {
+    if (this.isHandsetService.isHandset) {
       this.drawer.toggle();
     }
   }

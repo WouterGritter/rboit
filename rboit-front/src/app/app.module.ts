@@ -23,6 +23,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
 import { NavigationComponent } from './navigation/navigation.component';
 import { RandomMemeComponent } from './random-meme/random-meme.component';
+import { DeviceLocalHistoryLengthControlsComponent } from './device/device-local-history-length-controls/device-local-history-length-controls.component';
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 @NgModule({
@@ -36,6 +37,7 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     IndexPageComponent,
     NavigationComponent,
     RandomMemeComponent,
+    DeviceLocalHistoryLengthControlsComponent,
   ],
   imports: [
     BrowserModule,

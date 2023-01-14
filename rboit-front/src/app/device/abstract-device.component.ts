@@ -1,15 +1,19 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DeviceHistoryConfig, DeviceHistoryConfigService} from "./service/device-history-config.service";
+import {
+  DeviceHistoryConfigService,
+  RemoteDeviceHistoryConfig
+} from "./service/device-history-config.service";
 import {Observable} from "rxjs";
+import {IsHandsetService} from "../is-handset.service";
 
 @Component({
   template: ''
 })
 export abstract class AbstractDeviceComponent<Reading extends GenericReading> implements OnInit, OnDestroy {
-  @Input() private name: string = '';
+  @Input() name: string = '';
   private chart: any;
   private historyReadings: Reading[] = [];
-  private historyConfig: DeviceHistoryConfig | undefined;
+  private historyConfig: RemoteDeviceHistoryConfig | undefined;
   private updateIntervalId: any | undefined;
 
   chartOptions = {
@@ -24,6 +28,7 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
 
   abstract getDeviceService(): GenericDeviceService<Reading>;
   abstract getHistoryConfigService(): DeviceHistoryConfigService;
+  abstract getIsHandsetService(): IsHandsetService;
   abstract getAxisYConfigs(): any[];
   abstract generateTitle(name: string, lastReading?: Reading | undefined): string;
   abstract generateData(history: Reading[]): any[];
@@ -31,13 +36,16 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
   ngOnInit(): void {
     this.chartOptions.title.text = this.generateTitle(this.name);
 
-    this.getHistoryConfigService().getHistoryConfig().subscribe(config => {
+    this.getHistoryConfigService().getRemoteHistoryConfig().subscribe(config => {
       this.historyConfig = config;
       this.updateIntervalId = setInterval(() => this.updateReading(), this.historyConfig.clientHistoryIntervalMs);
     });
 
     this.initializeHistory()
       .then(() => this.updateReading());
+
+    this.getHistoryConfigService().getLocalHistoryLength()
+      .subscribe(() => this.renderChart());
   }
 
   ngOnDestroy() {
@@ -46,8 +54,17 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     }
   }
 
-  getChartInstance(chart: object) {
+  setChartInstance(chart: object) {
     this.chart = chart;
+    this.renderChart();
+  }
+
+  calculateChartAspectRatio() {
+    if (this.getIsHandsetService().isHandset) {
+      return '10 / 9';
+    } else {
+      return '3 / 1';
+    }
   }
 
   private updateReading() {
@@ -59,15 +76,15 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
           while (this.historyReadings.length > 0 && now - this.historyReadings[0].date.getTime() > this.historyConfig.maxHistoryLengthMs) {
             this.historyReadings.splice(0, 1);
           }
-
-          // Add new reading
-          const lastReading = this.historyReadings[this.historyReadings.length - 1];
-          if (reading.date.getTime() > lastReading.date.getTime()) {
-            this.historyReadings.push(reading);
-          }
         }
 
-        this.renderChart(this.historyReadings, reading);
+        // Add new reading
+        const lastReading = this.historyReadings[this.historyReadings.length - 1];
+        if (lastReading === undefined || reading.date.getTime() > lastReading.date.getTime()) {
+          this.historyReadings.push(reading);
+        }
+
+        this.renderChart();
       });
   }
 
@@ -76,18 +93,31 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
       this.getDeviceService().getHistory(this.name)
         .subscribe(historyReadings => {
           this.historyReadings = historyReadings;
-          this.renderChart(this.historyReadings);
+          this.renderChart();
 
           resolve();
         });
     });
   }
 
-  private renderChart(history: Reading[], lastReading?: Reading | undefined) {
+  private renderChart() {
+    if (this.chart === undefined) {
+      return;
+    }
+
+    const lastReading = this.historyReadings[this.historyReadings.length - 1];
     this.chartOptions.title.text = this.generateTitle(this.name, lastReading);
-    this.chartOptions.data = this.generateData(history);
+
+    const historyLength = this.getHistoryConfigService().getLocalHistoryLength().getValue();
+    this.chartOptions.data = this.generateData(
+      this.historyReadings.filter(reading => this.ageOf(reading) < historyLength)
+    );
 
     this.chart.render();
+  }
+
+  private ageOf(reading: Reading): number {
+    return new Date().getTime() - reading.date.getTime();
   }
 }
 

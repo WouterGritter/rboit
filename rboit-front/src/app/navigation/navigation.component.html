@@ -1,9 +1,9 @@
 
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
-               [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-               [mode]="(isHandset$ | async) ? 'over' : 'side'"
-               [opened]="(isHandset$ | async) === false">
+               [attr.role]="isHandsetService.isHandset ? 'dialog' : 'navigation'"
+               [mode]="isHandsetService.isHandset ? 'over' : 'side'"
+               [opened]="isHandsetService.isHandset === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
       <mat-list-item *ngFor="let link of links" [routerLink]="[link.routerLink]" (click)="linkClicked()">
@@ -19,7 +19,7 @@
         aria-label="Toggle sidenav"
         mat-icon-button
         (click)="drawer.toggle()"
-        *ngIf="isHandset$ | async">
+        *ngIf="isHandsetService.isHandset">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>Thingymebob</span>

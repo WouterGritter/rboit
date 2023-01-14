@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {PowerDeviceService, PowerReading} from "./service/power-device.service";
 import {DeviceHistoryConfigService} from "./service/device-history-config.service";
 import {AbstractDeviceComponent} from "./abstract-device.component";
+import {IsHandsetService} from "../is-handset.service";
 
 @Component({
   selector: 'app-power-device',
@@ -10,7 +11,7 @@ import {AbstractDeviceComponent} from "./abstract-device.component";
 })
 export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> {
 
-  constructor(private deviceService: PowerDeviceService, private historyConfigService: DeviceHistoryConfigService) {
+  constructor(private deviceService: PowerDeviceService, private historyConfigService: DeviceHistoryConfigService, private isHandsetService: IsHandsetService) {
     super();
   }
 
@@ -20,6 +21,10 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
 
   override getHistoryConfigService() {
     return this.historyConfigService;
+  }
+
+  override getIsHandsetService() {
+    return this.isHandsetService;
   }
 
   override getAxisYConfigs(): any[] {

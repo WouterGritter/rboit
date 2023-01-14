@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {DeviceHistoryConfigService} from "./service/device-history-config.service";
 import {TemperatureDeviceService, TemperatureReading} from "./service/temperature-device.service";
 import {AbstractDeviceComponent} from "./abstract-device.component";
+import {IsHandsetService} from "../is-handset.service";
 
 @Component({
   selector: 'app-temperature-device',
@@ -10,7 +11,7 @@ import {AbstractDeviceComponent} from "./abstract-device.component";
 })
 export class TemperatureDeviceComponent extends AbstractDeviceComponent<TemperatureReading> {
 
-  constructor(private deviceService: TemperatureDeviceService, private historyConfigService: DeviceHistoryConfigService) {
+  constructor(private deviceService: TemperatureDeviceService, private historyConfigService: DeviceHistoryConfigService, private isHandsetService: IsHandsetService) {
     super();
   }
 
@@ -20,6 +21,10 @@ export class TemperatureDeviceComponent extends AbstractDeviceComponent<Temperat
 
   override getHistoryConfigService() {
     return this.historyConfigService;
+  }
+
+  override getIsHandsetService(): IsHandsetService {
+    return this.isHandsetService;
   }
 
   override getAxisYConfigs(): any {
