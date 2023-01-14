@@ -1,5 +1,6 @@
-<button mat-raised-button color="basic" (click)="updateLength(60)">1 Minute</button>
-<button mat-raised-button color="basic" (click)="updateLength(60 * 30)">30 Minutes</button>
-<button mat-raised-button color="basic" (click)="updateLength(60 * 60)">1 Hour</button>
-<button mat-raised-button color="basic" (click)="updateLength(60 * 60 * 8)">8 Hours</button>
-<button mat-raised-button color="basic" (click)="updateLength(60 * 60 * 24)">1 Day</button>
+<button *ngFor="let button of buttons"
+        mat-raised-button
+        color="basic"
+        [disabled]="button.current"
+        (click)="updateLength(button.seconds)"
+>{{ button.label }}</button>
