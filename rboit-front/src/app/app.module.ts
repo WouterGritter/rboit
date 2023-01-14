@@ -9,7 +9,6 @@ import { PowerDeviceComponent } from './power/power-device/power-device.componen
 import {MatTabsModule} from "@angular/material/tabs";
 import {NgApexchartsModule} from "ng-apexcharts";
 import {HttpClientModule} from "@angular/common/http";
-import { PowerDeviceGroupComponent } from './power/power-device-group/power-device-group.component';
 
 import * as CanvasJSAngularChart from '../assets/canvasjs.angular.component';
 import {MatGridListModule} from "@angular/material/grid-list";
@@ -30,7 +29,6 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
   declarations: [
     AppComponent,
     PowerDeviceComponent,
-    PowerDeviceGroupComponent,
     CanvasJSChart,
     PowerPageComponent,
     TemperaturePageComponent,
