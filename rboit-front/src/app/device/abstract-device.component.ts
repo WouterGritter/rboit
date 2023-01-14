@@ -6,12 +6,11 @@ import {Observable} from "rxjs";
   template: ''
 })
 export abstract class AbstractDeviceComponent<Reading extends GenericReading> implements OnInit, OnDestroy {
-  @Input()
-  name: string = '';
-
-  chart: any;
-
-  historyReadings: Reading[] = [];
+  @Input() private name: string = '';
+  private chart: any;
+  private historyReadings: Reading[] = [];
+  private historyConfig: DeviceHistoryConfig | undefined;
+  private updateIntervalId: any | undefined;
 
   chartOptions = {
     theme: 'light2',
@@ -22,10 +21,6 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     axisY: this.getAxisYConfigs()[0],
     axisY2: this.getAxisYConfigs()[1],
   }
-
-  historyConfig: DeviceHistoryConfig | undefined;
-
-  updateIntervalId: any | undefined;
 
   abstract getDeviceService(): GenericDeviceService<Reading>;
   abstract getHistoryConfigService(): DeviceHistoryConfigService;
@@ -55,7 +50,7 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     this.chart = chart;
   }
 
-  updateReading() {
+  private updateReading() {
     this.getDeviceService().getReading(this.name)
       .subscribe(reading => {
         if (this.historyConfig) {
@@ -76,7 +71,7 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
       });
   }
 
-  initializeHistory(): Promise<void> {
+  private initializeHistory(): Promise<void> {
     return new Promise<void>(resolve => {
       this.getDeviceService().getHistory(this.name)
         .subscribe(historyReadings => {
