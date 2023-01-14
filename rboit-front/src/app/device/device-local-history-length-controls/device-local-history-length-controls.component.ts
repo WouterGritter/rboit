@@ -9,19 +9,19 @@ import {DeviceHistoryConfigService} from "../service/device-history-config.servi
 export class DeviceLocalHistoryLengthControlsComponent implements OnInit {
 
   buttons = [
-    {seconds: 60 * 15, label: '15 minutes', current: false},
-    {seconds: 60 * 60, label: '1 hour', current: false},
-    {seconds: 60 * 60 * 8, label: '8 hours', current: false},
-    {seconds: 60 * 60 * 24, label: '1 day', current: false},
+    {seconds: 60 * 15, label: '15 minutes', disabled: false},
+    {seconds: 60 * 60, label: '1 hour', disabled: false},
+    {seconds: 60 * 60 * 8, label: '8 hours', disabled: false},
+    {seconds: 60 * 60 * 24, label: '1 day', disabled: false},
   ];
 
   constructor(public historyConfigService: DeviceHistoryConfigService) {
     this.historyConfigService.getLocalHistoryLength().subscribe(milliseconds => {
       const seconds = milliseconds / 1000;
-      this.buttons.forEach(b => b.current = b.seconds === seconds);
+      this.buttons.forEach(b => b.disabled = b.seconds === seconds);
 
-      if (!this.buttons.find(b => b.current)) {
-        this.buttons[this.buttons.length - 1].current = true;
+      if (!this.buttons.find(b => b.disabled)) {
+        this.buttons[this.buttons.length - 1].disabled = true;
       }
     });
   }

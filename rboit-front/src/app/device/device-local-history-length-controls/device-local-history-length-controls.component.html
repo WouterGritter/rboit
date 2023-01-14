@@ -1,6 +1,6 @@
 <button *ngFor="let button of buttons"
         mat-raised-button
         color="basic"
-        [disabled]="button.current"
+        [disabled]="button.disabled"
         (click)="updateLength(button.seconds)"
 >{{ button.label }}</button>
