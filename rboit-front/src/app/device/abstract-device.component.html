@@ -1,3 +1,7 @@
 <div class="graph-holder">
-  <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', 'aspect-ratio': calculateChartAspectRatio()}" (chartInstance)="setChartInstance($event)"></canvasjs-chart>
+  <canvasjs-chart
+    [options]="chartOptions"
+    [styles]="{width: '100%', 'aspect-ratio': this.getIsHandsetService().isHandset ? '3 / 2' : '3 / 1'}"
+    (chartInstance)="setChartInstance($event)"
+  ></canvasjs-chart>
 </div>

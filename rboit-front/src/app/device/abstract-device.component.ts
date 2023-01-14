@@ -59,14 +59,6 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     this.renderChart();
   }
 
-  calculateChartAspectRatio() {
-    if (this.getIsHandsetService().isHandset) {
-      return '10 / 9';
-    } else {
-      return '3 / 1';
-    }
-  }
-
   private updateReading() {
     this.getDeviceService().getReading(this.name)
       .subscribe(reading => {
