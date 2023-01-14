@@ -12,17 +12,24 @@ export class DeviceLocalHistoryLengthControlsComponent implements OnInit {
     {seconds: 60 * 15, label: '15 minutes', current: false},
     {seconds: 60 * 60, label: '1 hour', current: false},
     {seconds: 60 * 60 * 8, label: '8 hours', current: false},
-    {seconds: 60 * 60 * 24, label: '1 day', current: true},
+    {seconds: 60 * 60 * 24, label: '1 day', current: false},
   ];
 
-  constructor(public historyConfigService: DeviceHistoryConfigService) { }
+  constructor(public historyConfigService: DeviceHistoryConfigService) {
+    this.historyConfigService.getLocalHistoryLength().subscribe(milliseconds => {
+      const seconds = milliseconds / 1000;
+      this.buttons.forEach(b => b.current = b.seconds === seconds);
+
+      if (!this.buttons.find(b => b.current)) {
+        this.buttons[this.buttons.length - 1].current = true;
+      }
+    });
+  }
 
   ngOnInit(): void {
   }
 
   updateLength(seconds: number) {
-    this.buttons.forEach(b => b.current = b.seconds === seconds);
-
     this.historyConfigService.getLocalHistoryLength().next(seconds * 1000);
   }
 
