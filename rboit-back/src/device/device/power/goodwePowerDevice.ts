@@ -36,9 +36,9 @@ export class GoodwePowerDevice extends CachedDevice<PowerReading> {
 
         return {
             date: new Date(reading.inverter.last_refresh_time),
-            voltage,
-            amperage,
-            power,
+            voltage: voltage,
+            amperage: -amperage,
+            power: -power,
             source: reading,
         }
     }
