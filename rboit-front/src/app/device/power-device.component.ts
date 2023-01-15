@@ -67,7 +67,7 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
     const powers = history
       .map(reading => reading.power || 0);
 
-    return Math.max(...powers) <= 0;
+    return Math.min(...powers) < 0 && Math.max(...powers) <= 0;
   }
 
   private readingToDataPoint(reading: PowerReading) {
