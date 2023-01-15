@@ -15,6 +15,10 @@ export function calculateRange(numbers: number[], roundToClosestTo: number): { m
   min = Math.floor(min / roundToClosestTo) * roundToClosestTo;
   max = Math.ceil(max / roundToClosestTo) * roundToClosestTo;
 
+  if (min === max) {
+    max += roundToClosestTo;
+  }
+
   return {
     minimum: min,
     maximum: max,
