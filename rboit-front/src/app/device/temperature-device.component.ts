@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
 import {DeviceHistoryConfigService} from "./service/device-history-config.service";
 import {TemperatureDeviceService, TemperatureReading} from "./service/temperature-device.service";
-import {AbstractDeviceComponent} from "./abstract-device.component";
+import {AbstractDeviceComponent, ChartData} from "./abstract-device.component";
 import {IsHandsetService} from "../is-handset.service";
+import {calculateRange} from "../helpers/mathHelpers";
 
 @Component({
   selector: 'app-temperature-device',
@@ -27,20 +28,7 @@ export class TemperatureDeviceComponent extends AbstractDeviceComponent<Temperat
     return this.isHandsetService;
   }
 
-  override getAxisYConfigs(): any {
-    return [
-      {
-        suffix: '°C',
-        labelFontColor: '#FF2E2E',
-      },
-      {
-        suffix: '%',
-        labelFontColor: '#5C5CFF',
-      }
-    ];
-  }
-
-  override generateTitle(name: string, lastReading?: TemperatureReading | undefined): string {
+  override parseReadings(name: string, history: TemperatureReading[], lastReading: TemperatureReading | undefined): ChartData {
     let title = name;
 
     if (lastReading?.temperature !== undefined) {
@@ -50,26 +38,43 @@ export class TemperatureDeviceComponent extends AbstractDeviceComponent<Temperat
       title = `${title} / ${lastReading.humidity.toFixed(1)}%`;
     }
 
-    return title;
+    return {
+      title: title,
+      axisY: {
+        suffix: '°C',
+        labelFontColor: '#FF2E2E',
+        ...this.calculateMinMax(history, 'temperature', 5),
+      },
+      axisY2: {
+        suffix: '%',
+        labelFontColor: '#5C5CFF',
+        ...this.calculateMinMax(history, 'humidity', 10),
+      },
+      data: [
+        {
+          axisYType: 'primary',
+          type: 'line',
+          yValueFormatString: '0.0°C',
+          color: '#FF5C5C',
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'temperature')),
+        },
+        {
+          axisYType: 'secondary',
+          type: 'line',
+          yValueFormatString: '0.0%',
+          color: '#8A8AFF',
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'humidity')),
+        }
+      ]
+    };
   }
 
-  override generateData(history: TemperatureReading[]): any[] {
-    return [
-      {
-        axisYType: 'primary',
-        type: 'line',
-        yValueFormatString: '0.0°C',
-        color: '#FF5C5C',
-        dataPoints: history.map(reading => this.readingToDataPoint(reading, 'temperature')),
-      },
-      {
-        axisYType: 'secondary',
-        type: 'line',
-        yValueFormatString: '0.0%',
-        color: '#8A8AFF',
-        dataPoints: history.map(reading => this.readingToDataPoint(reading, 'humidity')),
-      }
-    ];
+  private calculateMinMax(history: TemperatureReading[], value: 'temperature' | 'humidity', roundToClosestTo: number): { minimum: number, maximum: number } {
+    const numbers = history
+      .filter(reading => reading[value] !== undefined)
+      .map(reading => reading[value] as number);
+
+    return calculateRange(numbers, roundToClosestTo);
   }
 
   private readingToDataPoint(reading: TemperatureReading, value: 'temperature' | 'humidity') {

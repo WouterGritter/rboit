@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {BehaviorSubject, ReplaySubject, Subject} from "rxjs";
-import {bindToLocalStorage} from "../../localStorageHelpers";
+import {bindToLocalStorage} from "../../helpers/localStorageHelpers";
 
 @Injectable({
   providedIn: 'root'

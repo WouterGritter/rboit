@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {map} from "rxjs";
+import {roundToDigits} from "../../helpers/mathHelpers";
 
 @Injectable({
   providedIn: 'root'
@@ -30,19 +31,10 @@ export class TemperatureDeviceService {
   private normalizeReading(reading: TemperatureReading): TemperatureReading {
     reading.date = new Date(reading.date); // We're actually getting a string from the backend...
 
-    reading.temperature = this.round(reading.temperature, 2);
-    reading.humidity = this.round(reading.humidity, 2);
+    reading.temperature = roundToDigits(reading.temperature, 2);
+    reading.humidity = roundToDigits(reading.humidity, 2);
 
     return reading;
-  }
-
-  private round(num: number | undefined, digits: number): number | undefined {
-    if (num === undefined) {
-      return undefined;
-    }
-
-    let rounder = Math.pow(10, digits);
-    return Math.round(num * rounder) / rounder;
   }
 }
 
