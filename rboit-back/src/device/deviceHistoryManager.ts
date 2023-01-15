@@ -124,10 +124,13 @@ export class DeviceHistoryManager {
             }
 
             if (device.history.length > 0) {
-                // Insert empty history item
-                device.history.push({
-                    date: device.history[device.history.length - 1].date,
-                });
+                const lastReading = device.history[device.history.length - 1];
+                if (new Date().getTime() - lastReading.date > this.config.historyIntervalMs * 10) {
+                    // We missed more than 10 data points. Insert empty history item.
+                    device.history.push({
+                        date: device.history[device.history.length - 1].date,
+                    });
+                }
             }
 
             this.purgeOutdatedHistory(device);
