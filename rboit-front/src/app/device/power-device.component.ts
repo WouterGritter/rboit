@@ -56,7 +56,7 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
 
   private calculateMinMax(history: PowerReading[]): { minimum: number, maximum: number } {
     const powers = history.map(reading => reading.power || 0);
-    return calculateRange(powers, 100);
+    return calculateRange([...powers, 0], 100);
   }
 
   private isOnlyNegativePower(history: PowerReading[]): boolean {
