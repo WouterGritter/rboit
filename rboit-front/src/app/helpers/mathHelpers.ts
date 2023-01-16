@@ -8,15 +8,20 @@ export function roundToDigits<N extends number | undefined>(num: N, digits: numb
   }
 }
 
-export function calculateRange(numbers: number[], roundToClosestTo: number): { minimum: number, maximum: number } {
+export function calculateRange(numbers: number[], step: number, border?: number): { minimum: number, maximum: number } {
   let min = Math.min(...numbers);
   let max = Math.max(...numbers);
 
-  min = Math.floor(min / roundToClosestTo) * roundToClosestTo;
-  max = Math.ceil(max / roundToClosestTo) * roundToClosestTo;
+  min = Math.floor(min / step) * step;
+  max = Math.ceil(max / step) * step;
 
   if (min === max) {
-    max += roundToClosestTo;
+    max += step;
+  }
+
+  if (border) {
+    min -= border;
+    max += border;
   }
 
   return {

@@ -43,12 +43,10 @@ export class TemperatureDeviceComponent extends AbstractDeviceComponent<Temperat
       axisY: {
         suffix: '°C',
         labelFontColor: '#FF2E2E',
-        ...this.calculateMinMaxInterval(history, 'temperature', 5, 5),
       },
       axisY2: {
         suffix: '%',
         labelFontColor: '#5C5CFF',
-        ...this.calculateMinMaxInterval(history, 'humidity', 10, 5),
       },
       data: [
         {
@@ -66,20 +64,6 @@ export class TemperatureDeviceComponent extends AbstractDeviceComponent<Temperat
           dataPoints: history.map(reading => this.readingToDataPoint(reading, 'humidity')),
         }
       ]
-    };
-  }
-
-  private calculateMinMaxInterval(history: TemperatureReading[], value: 'temperature' | 'humidity', roundToClosestTo: number, intervalSteps: number): { minimum: number, maximum: number, interval: number | undefined } {
-    const numbers = history
-      .filter(reading => reading[value] !== undefined)
-      .map(reading => reading[value] as number);
-
-    const range = calculateRange(numbers, roundToClosestTo);
-
-    return {
-      minimum: range.minimum,
-      maximum: range.maximum,
-      interval: Math.floor((range.maximum - range.minimum) / intervalSteps),
     };
   }
 
