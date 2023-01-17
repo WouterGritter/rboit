@@ -1,11 +1,9 @@
 <app-device-local-history-length-controls></app-device-local-history-length-controls>
 
-<div class="row">
-  <div class="column">
-    <app-temperature-device name="papa-temp-sensor"></app-temperature-device>
-    <app-temperature-device name="rb-temperature"></app-temperature-device>
-  </div>
-  <div class="column">
-    <app-temperature-device name="rb-outdoor"></app-temperature-device>
-  </div>
-</div>
+<app-devices-view
+  [devices]="[
+    {type: 'temperature', name: 'papa-temp-sensor'},
+    {type: 'temperature', name: 'rb-outdoor'},
+    {type: 'temperature', name: 'rb-temperature'},
+  ]"
+></app-devices-view>

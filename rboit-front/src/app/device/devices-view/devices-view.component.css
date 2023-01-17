@@ -1,0 +1,8 @@
+.columns-holder {
+  display: flex;
+}
+
+.column {
+  flex: 100%;
+}
+

@@ -1,16 +1,14 @@
 <app-device-local-history-length-controls></app-device-local-history-length-controls>
 
-<div class="row">
-  <div class="column">
-    <app-power-device [name]="'andledon-smart-meter'"></app-power-device>
-    <app-power-device [name]="'rb-boiler'"></app-power-device>
-    <app-power-device [name]="'rb-ac'"></app-power-device>
-    <app-power-device [name]="'rb-tv'"></app-power-device>
-  </div>
-  <div class="column">
-    <app-power-device [name]="'rb-smart-meter'"></app-power-device>
-    <app-power-device [name]="'solar'"></app-power-device>
-    <app-power-device [name]="'rb-solar'"></app-power-device>
-    <app-power-device [name]="'rb-kachel-slaapkamer'"></app-power-device>
-  </div>
-</div>
+<app-devices-view
+  [devices]="[
+    {type: 'power', name: 'andledon-smart-meter'},
+    {type: 'power', name: 'rb-smart-meter'},
+    {type: 'power', name: 'rb-boiler'},
+    {type: 'power', name: 'solar'},
+    {type: 'power', name: 'rb-ac'},
+    {type: 'power', name: 'rb-solar'},
+    {type: 'power', name: 'rb-tv'},
+    {type: 'power', name: 'rb-kachel-slaapkamer'},
+  ]"
+></app-devices-view>
