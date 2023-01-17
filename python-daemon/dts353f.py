@@ -38,7 +38,6 @@ def dts353f_read_energy():
     total = delivery - redelivery
 
     return {
-        'timestamp': str(datetime.now()),
         'delivery': delivery,
         'redelivery': redelivery,
         'total': total,
@@ -57,7 +56,6 @@ def dts353f_read_power():
     l3_voltage = retry(lambda: rs485.read_float(0x0012))
 
     return {
-        'timestamp': str(datetime.now()),
         'total_power': total_power,
         'l1_power': l1_power,
         'l2_power': l2_power,

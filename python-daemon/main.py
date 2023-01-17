@@ -30,7 +30,7 @@ def get_goodwe_device_endpoint(system_id):
 
 
 @app.route('/dts353f')
-def get_dts353f_energy_endpoint():
+def get_dts353f_energy_and_power_endpoint():
     return {
         'energy': dts353f_read_energy(),
         'power': dts353f_read_power(),
