@@ -49,7 +49,7 @@ export abstract class CachedDevice<T> implements Device<T> {
 
             this.fetching = true;
             try{
-                this.cachedReading = await this.getActualReading();
+                this.cachedReading = await retry(() => this.getActualReading());
             }catch(e) {
                 this.fetching = false;
                 return Promise.reject(e);
@@ -70,5 +70,19 @@ export abstract class CachedDevice<T> implements Device<T> {
 
     private shouldRefreshCache(): boolean {
         return this.cachedReading === undefined || new Date().getTime() - this.cachedReadingDate > DEVICE_CACHE_MAX_AGE;
+    }
+}
+
+async function retry<T>(task: () => Promise<T>, maxTries: number = 3): Promise<T> {
+    let tries = 0;
+    while (true) {
+        try {
+            return await task();
+        }catch(e) {
+            tries++;
+            if (tries == maxTries) {
+                throw e;
+            }
+        }
     }
 }
