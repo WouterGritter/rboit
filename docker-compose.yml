@@ -14,6 +14,8 @@ services:
     env_file: '.env'
     ports:
     - '8082:80'  # Only needed for development
+    devices:
+    - '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MONL8-if00-port0'
 
   rboit-back:
     build: './rboit-back'
