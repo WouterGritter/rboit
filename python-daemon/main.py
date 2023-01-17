@@ -29,6 +29,14 @@ def get_goodwe_device_endpoint(system_id):
     return device.data
 
 
+@app.route('/dts353f')
+def get_dts353f_energy_endpoint():
+    return {
+        'energy': dts353f_read_energy(),
+        'power': dts353f_read_power(),
+    }
+
+
 @app.route('/dts353f/energy')
 def get_dts353f_energy_endpoint():
     return dts353f_read_energy()
