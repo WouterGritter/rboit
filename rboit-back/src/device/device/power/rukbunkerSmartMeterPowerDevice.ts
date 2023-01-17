@@ -15,7 +15,7 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
 
     private toPowerReading(reading: DTS353FReading): PowerReading {
         const totalVoltage = (reading.power.l1_voltage + reading.power.l2_voltage + reading.power.l3_voltage) / 3;
-        const totalPower = reading.power.total_power;
+        const totalPower = reading.power.total_power * 1000;
         const totalAmperage = totalPower / totalVoltage;
 
         return {
