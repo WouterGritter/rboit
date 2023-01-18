@@ -25,6 +25,7 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { RandomMemeComponent } from './random-meme/random-meme.component';
 import { DeviceLocalHistoryLengthControlsComponent } from './device/device-local-history-length-controls/device-local-history-length-controls.component';
 import { DevicesViewComponent } from './device/devices-view/devices-view.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 @NgModule({
@@ -54,7 +55,8 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     MatIconModule,
     MatSidenavModule,
     MatListModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSlideToggleModule
   ],
   providers: [],
   bootstrap: [AppComponent]

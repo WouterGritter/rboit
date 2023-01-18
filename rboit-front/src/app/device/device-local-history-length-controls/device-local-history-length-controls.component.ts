@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {DeviceHistoryConfigService} from "../service/device-history-config.service";
+import {MatSlideToggleChange} from "@angular/material/slide-toggle/slide-toggle";
 
 @Component({
   selector: 'app-device-local-history-length-controls',
@@ -31,6 +32,10 @@ export class DeviceLocalHistoryLengthControlsComponent implements OnInit {
 
   updateLength(seconds: number) {
     this.historyConfigService.getLocalHistoryLength().next(seconds * 1000);
+  }
+
+  updateAverageValues(e: MatSlideToggleChange) {
+    this.historyConfigService.getAverageHistoryValues().next(e.checked);
   }
 
 }

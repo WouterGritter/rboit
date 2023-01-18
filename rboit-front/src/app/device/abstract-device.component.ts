@@ -42,6 +42,9 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
 
     this.getHistoryConfigService().getLocalHistoryLength()
       .subscribe(() => this.renderChart());
+
+    this.getHistoryConfigService().getAverageHistoryValues()
+      .subscribe(() => this.renderChart());
   }
 
   ngOnDestroy() {
@@ -101,12 +104,44 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
       lastReading
     );
 
+    const averageHistoryValues = this.getHistoryConfigService().getAverageHistoryValues().getValue();
+    if (averageHistoryValues) {
+      parsed.data.forEach(data => data.dataPoints = this.average(data.dataPoints));
+    }
+
     this.chartOptions.title.text = parsed.title;
     this.chartOptions.axisY = parsed.axisY;
     this.chartOptions.axisY2 = parsed.axisY2;
     this.chartOptions.data = parsed.data;
 
     this.chart.render();
+  }
+
+  private average<DataType extends { x: any, y: number | undefined }>(data: DataType[]): DataType[] {
+    const result: DataType[] = [];
+
+    const newSize = 500;
+    const averagePercentage = 0.006;
+
+    const step = Math.max(1, Math.floor(data.length / newSize));
+    for (let i = 0; i < data.length; i += step) {
+      let cumulativeYValues = 0;
+      let yValueCount = 0;
+      for (let j = i; j < Math.min(data.length, i + data.length * averagePercentage); j++) {
+        let y = data[j].y;
+        if (y !== undefined) {
+          cumulativeYValues += y;
+          yValueCount++;
+        }
+      }
+
+      result.push({
+        ...data[i],
+        y: yValueCount > 0 ? cumulativeYValues / yValueCount : undefined,
+      });
+    }
+
+    return result;
   }
 
   private ageOf(reading: Reading): number {
@@ -118,7 +153,14 @@ export declare type ChartData = {
   title: string;
   axisY: any;
   axisY2?: any;
-  data: any[];
+  data: {
+    dataPoints: {
+      x: Date | number;
+      y: number | undefined;
+      [key: string]: any;
+    }[]
+    [key: string]: any;
+  }[];
 };
 
 declare type GenericReading = {

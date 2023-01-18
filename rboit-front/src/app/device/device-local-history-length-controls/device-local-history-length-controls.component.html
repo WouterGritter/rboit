@@ -1,6 +1,13 @@
 <button *ngFor="let button of buttons"
+        class="control-element"
         mat-raised-button
         color="basic"
         [disabled]="button.disabled"
         (click)="updateLength(button.seconds)"
 >{{ button.label }}</button>
+
+<mat-slide-toggle
+  class="control-element"
+  [checked]="historyConfigService.getAverageHistoryValues().getValue()"
+  (change)="updateAverageValues($event)"
+>Average values</mat-slide-toggle>
