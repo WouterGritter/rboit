@@ -1,7 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatSidenav} from "@angular/material/sidenav";
-import {map, Observable, shareReplay} from "rxjs";
-import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {IsHandsetService} from "../is-handset.service";
 
 @Component({
@@ -12,9 +10,10 @@ import {IsHandsetService} from "../is-handset.service";
 export class NavigationComponent implements OnInit {
   @ViewChild(MatSidenav) drawer!: MatSidenav;
 
-  links: NavbarItem[] = [
+  links: {title: string, icon?: string, routerLink: string}[] = [
     { title: 'Home', icon: 'dashboard', routerLink: '' },
     { title: 'Power', icon: 'power', routerLink: 'power' },
+    { title: 'RB Power', icon: "power", routerLink: 'rb-power' },
     { title: 'Temperature', icon: 'dashboard', routerLink: 'temperature' },
   ];
 
@@ -29,10 +28,4 @@ export class NavigationComponent implements OnInit {
       this.drawer.toggle();
     }
   }
-}
-
-export interface NavbarItem {
-  title: string;
-  icon?: string;
-  routerLink: string;
 }

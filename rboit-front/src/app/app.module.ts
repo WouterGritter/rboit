@@ -27,6 +27,7 @@ import { DeviceLocalHistoryLengthControlsComponent } from './device/device-local
 import { DevicesViewComponent } from './device/devices-view/devices-view.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ThreePhasePowerDeviceComponent} from "./device/three-phase-power-device.component";
+import { RbPowerPageComponent } from './pages/rb-power-page/rb-power-page.component';
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 @NgModule({
@@ -43,6 +44,7 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     DeviceLocalHistoryLengthControlsComponent,
     DevicesViewComponent,
     ThreePhasePowerDeviceComponent,
+    RbPowerPageComponent,
   ],
   imports: [
     BrowserModule,
