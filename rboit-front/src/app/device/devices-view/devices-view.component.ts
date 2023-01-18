@@ -12,7 +12,7 @@ export class DevicesViewComponent implements OnInit {
   columnAmounts: { desktop: number, handheld: number } = { desktop: 2, handheld: 1 };
 
   @Input('devices')
-  devices: {type: 'power' | 'temperature', name: string}[] = [];
+  devices: {type: 'power' | 'three-phase-power' | 'temperature', name: string}[] = [];
 
   constructor(private isHandsetService: IsHandsetService) { }
 

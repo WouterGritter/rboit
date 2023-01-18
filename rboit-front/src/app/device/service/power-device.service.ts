@@ -39,9 +39,16 @@ export class PowerDeviceService {
   }
 }
 
-export declare type PowerReading = {
+export declare type PowerReading = PowerReadingValues & {
   date: Date;
+  L1?: PowerReadingValues;
+  L2?: PowerReadingValues;
+  L3?: PowerReadingValues;
+  source: any;
+}
+
+export declare type PowerReadingValues = {
   voltage?: number;
   amperage?: number;
   power?: number;
-}
+};
