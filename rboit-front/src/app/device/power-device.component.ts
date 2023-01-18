@@ -32,13 +32,27 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
     return {
       title: this.generateTitle(name, lastReading),
       axisY: {
+        suffix: 'W',
         ...this.calculateMinMax(history),
         reversed: this.isOnlyNegativePower(history),
       },
+      axisY2: {
+        suffix: 'V',
+        minimum: 200,
+        maximum: 250,
+      },
       data: [
         {
+          axisYType: 'primary',
           type: 'line',
-          dataPoints: history.map(reading => this.readingToDataPoint(reading))
+          yValueFormatString: '0.0W',
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'power')),
+        },
+        {
+          axisYType: 'secondary',
+          type: 'line',
+          yValueFormatString: '0.0V',
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'voltage')),
         }
       ],
     };
@@ -70,18 +84,11 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
     return Math.min(...powers) < 0 && Math.max(...powers) <= 0;
   }
 
-  private readingToDataPoint(reading: PowerReading) {
-    let toolTipContent = `${String(reading.date.getHours()).padStart(2, '0')}:${String(reading.date.getMinutes()).padStart(2, '0')}:${String(reading.date.getSeconds()).padStart(2, '0')}`;
-
-    if (reading.power !== undefined) toolTipContent += ` · ${reading.power.toFixed(1)}W`;
-    if (reading.voltage !== undefined) toolTipContent += ` / ${reading.voltage.toFixed(1)}V`;
-    if (reading.amperage !== undefined) toolTipContent += ` / ${reading.amperage.toFixed(2)}A`;
-
+  private readingToDataPoint(reading: PowerReading, value: 'power' | 'voltage' | 'amperage') {
     return {
       x: reading.date,
-      y: reading.power,
+      y: reading[value],
       markerSize: 1,
-      toolTipContent: toolTipContent,
     };
   }
 }
