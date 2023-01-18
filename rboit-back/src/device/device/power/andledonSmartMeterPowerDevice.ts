@@ -1,5 +1,5 @@
 import {CachedDevice} from "../cachedDevice";
-import {PowerReading} from "./powerReading";
+import {PowerReading, PowerReadingValues} from "./powerReading";
 import {DeviceType} from "../device";
 
 export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
@@ -13,29 +13,32 @@ export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
             .then(readings => this.toPowerReading(readings));
     }
 
+    private toPowerReadingValues(phaseReading: CurrentPhaseReading): PowerReadingValues {
+        const power = (phaseReading.power_delivery - phaseReading.power_redelivery) * 1000;
+        const voltage = phaseReading.voltage;
+        const amperage = power / voltage;
+
+        return {power, voltage, amperage};
+    }
+
     private toPowerReading(reading: AndledonSmartMeterReading): PowerReading {
-        let totalVoltage = 0, totalPower = 0, totalAmperage = 0;
+        const L1 = this.toPowerReadingValues(reading.current_readings.L1);
+        const L2 = this.toPowerReadingValues(reading.current_readings.L2);
+        const L3 = this.toPowerReadingValues(reading.current_readings.L3);
 
-        const phaseReadings: CurrentPhaseReading[] = [reading.current_readings.L1, reading.current_readings.L2, reading.current_readings.L3];
-        for (const phaseReading of phaseReadings) {
-            let voltage = phaseReading.voltage;
-            let power = (phaseReading.power_delivery - phaseReading.power_redelivery) * 1000;
-            let amperage = power / voltage;
-
-            totalVoltage += voltage;
-            totalPower += power;
-            totalAmperage += amperage;
-        }
-
-        // Average the voltage
-        totalVoltage /= phaseReadings.length;
+        const total = {
+            power: L1.power + L2.power + L3.power,
+            amperage: L1.amperage + L2.amperage + L3.amperage,
+            voltage: (L1.voltage + L2.voltage + L3.voltage) / 3,
+        };
 
         return {
             date: new Date(reading.timestamp),
-            voltage: totalVoltage,
-            power: totalPower,
-            amperage: totalAmperage,
             source: reading,
+            ...total,
+            L1,
+            L2,
+            L3,
         };
     }
 }

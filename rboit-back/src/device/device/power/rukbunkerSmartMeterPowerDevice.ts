@@ -1,5 +1,5 @@
 import {CachedDevice} from "../cachedDevice";
-import {PowerReading} from "./powerReading";
+import {PowerReading, PowerReadingValues} from "./powerReading";
 import {DeviceType} from "../device";
 
 export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
@@ -13,17 +13,32 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
             .then(readings => this.toPowerReading(readings));
     }
 
+    private toPowerReadingValues(reading: DTS353FReading, phase: 'l1' | 'l2' | 'l3'): PowerReadingValues {
+        const power = reading.power[`${phase}_power`] * 1000;
+        const voltage = reading.power[`${phase}_voltage`];
+        const amperage = power / voltage;
+
+        return {power, voltage, amperage};
+    }
+
     private toPowerReading(reading: DTS353FReading): PowerReading {
-        const totalVoltage = (reading.power.l1_voltage + reading.power.l2_voltage + reading.power.l3_voltage) / 3;
-        const totalPower = reading.power.total_power * 1000;
-        const totalAmperage = totalPower / totalVoltage;
+        const L1 = this.toPowerReadingValues(reading, 'l1');
+        const L2 = this.toPowerReadingValues(reading, 'l2');
+        const L3 = this.toPowerReadingValues(reading, 'l3');
+
+        const total = {
+            power: L1.power + L2.power + L3.power,
+            amperage: L1.amperage + L2.amperage + L3.amperage,
+            voltage: (L1.voltage + L2.voltage + L3.voltage) / 3,
+        };
 
         return {
             date: new Date(),
-            voltage: totalVoltage,
-            power: totalPower,
-            amperage: totalAmperage,
             source: reading,
+            ...total,
+            L1,
+            L2,
+            L3,
         };
     }
 }
