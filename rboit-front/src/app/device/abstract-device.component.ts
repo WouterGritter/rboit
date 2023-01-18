@@ -127,8 +127,12 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     for (let i = 0; i < data.length; i += step) {
       let cumulativeYValues = 0;
       let yValueCount = 0;
-      for (let j = i; j < Math.min(data.length, i + data.length * averagePercentage); j++) {
-        let y = data[j].y;
+
+      const averagingMin = Math.max(0, Math.floor(i - data.length * averagePercentage / 2));
+      const averagingMax = Math.min(data.length - 1, Math.ceil(i + data.length * averagePercentage / 2));
+
+      for (let j = averagingMin; j <= averagingMax; j++) {
+        const y = data[j].y;
         if (y !== undefined) {
           cumulativeYValues += y;
           yValueCount++;
