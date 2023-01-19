@@ -44,7 +44,7 @@ export class BaseDaikinDevice {
 
     public async performNonCachedRequest(endpoint: string): Promise<DaikinResponse> {
         return this.performRawRequest(endpoint)
-            .then(response => this.parseResponse(response));
+            .then(response => parseResponse(response));
     }
 
     private async performRawRequest(endpoint: string): Promise<string> {
@@ -70,30 +70,6 @@ export class BaseDaikinDevice {
             );
         });
     }
-
-    private parseResponse(response: string): DaikinResponse {
-        const res: any = {};
-
-        response.split(',').forEach(entry => {
-            const parts = entry.split('=');
-            const key = parts[0];
-            const value = parts[1];
-
-            if (value === '-') {
-                res[key] = undefined;
-            } else if (!isNaN(parseFloat(value))) {
-                res[key] = parseFloat(value);
-            } else {
-                res[key] = value;
-            }
-        });
-
-        if (res.ret === undefined) {
-            throw new Error(`Expected ret attribute to be present, but there was no ret attribute in the response. response=${response}`);
-        }
-
-        return res as DaikinResponse;
-    }
 }
 
 export declare type DaikinDeviceConfig = {
@@ -101,3 +77,45 @@ export declare type DaikinDeviceConfig = {
     cacheEnabled?: boolean;
     cacheTimeToLive?: number;
 };
+
+function parseResponse(response: string): DaikinResponse {
+    const res: any = {};
+
+    response.split(',').forEach(entry => {
+        const parts = entry.split('=');
+        const key = parts[0];
+        const value = parts[1];
+
+        res[key] = parseValue(value);
+    });
+
+    if (res.ret === undefined) {
+        throw new Error(`Expected ret attribute to be present, but there was no ret attribute in the response. response=${response}`);
+    }
+
+    return res as DaikinResponse;
+}
+
+function parseValue(value: string): any {
+    if (value === '-') {
+        return undefined;
+    } else if (isParsableNumber(value)) {
+        return parseFloat(value);
+    } else if (value.indexOf('/') !== -1) {
+        return value.split('/').map(_value => parseValue(_value));
+    } else {
+        return value;
+    }
+}
+
+function isParsableNumber(str: string): boolean {
+    const chars = '0123456789.-';
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charAt(i);
+        if (chars.indexOf(char) === -1) {
+            return false;
+        }
+    }
+
+    return true;
+}

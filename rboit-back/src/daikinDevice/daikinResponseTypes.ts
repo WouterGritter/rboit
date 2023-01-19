@@ -155,11 +155,34 @@ export declare type DaikinGetTargetResponse = {
 export declare type DaikinGetWeekPowerResponse = {
     ret: string;
     today_runtime: number;
-    datas: number;
+    datas: number[];
 };
 
 export declare type DaikinGetYearPowerResponse = {
     ret: string;
-    previous_year: number;
-    this_year: number;
+    previous_year: number[];
+    this_year: number[];
+};
+
+export declare type DaikinGetDayPowerEx = {
+    ret: string;
+    curr_day_heat: number[];
+    prev_1day_heat: number[];
+    curr_day_cool: number[];
+    prev_1day_cool: number[];
+};
+
+export declare type DaikinGetWeekPowerEx = {
+    ret: string;
+    s_dayw: number;
+    week_heat: number[];
+    week_cool: number[];
+};
+
+export declare type DaikinGetYearPowerEx = {
+    ret: string;
+    curr_year_heat: number[];
+    prev_year_heat: number[];
+    curr_year_cool: number[];
+    prev_year_cool: number[];
 };

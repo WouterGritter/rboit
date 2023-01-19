@@ -2,7 +2,7 @@ import {
     DaikinGetModelInfoResponse, DaikinGetControlInfoResponse,
     DaikinGetSensorInfoResponse, DaikinGetPriceResponse,
     DaikinGetTargetResponse, DaikinGetWeekPowerResponse,
-    DaikinGetYearPowerResponse
+    DaikinGetYearPowerResponse, DaikinGetDayPowerEx, DaikinGetWeekPowerEx, DaikinGetYearPowerEx
 } from "./daikinResponseTypes";
 import {CommonDaikinDevice, CommonDaikinDeviceState} from "./commonDaikinDevice";
 import {DaikinDeviceConfig} from "./baseDaikinDevice";
@@ -60,6 +60,21 @@ export class AirconditionerDaikinDevice extends CommonDaikinDevice {
     public async getYearPower(): Promise<DaikinGetYearPowerResponse> {
         return this.performRequest('/aircon/get_year_power')
             .then(r => r as DaikinGetYearPowerResponse);
+    }
+
+    public async getDayPowerEx(): Promise<DaikinGetDayPowerEx> {
+        return this.performRequest('/aircon/get_day_power_ex')
+            .then(r => r as DaikinGetDayPowerEx);
+    }
+
+    public async getWeekPowerEx(): Promise<DaikinGetWeekPowerEx> {
+        return this.performRequest('/aircon/get_week_power_ex')
+            .then(r => r as DaikinGetWeekPowerEx);
+    }
+
+    public async getYearPowerEx(): Promise<DaikinGetYearPowerEx> {
+        return this.performRequest('/aircon/get_year_power_ex')
+            .then(r => r as DaikinGetYearPowerEx);
     }
 }
 
