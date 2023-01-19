@@ -16,7 +16,9 @@ export class DeviceController {
         let device = DEVICE_REPOSITORY.findDevice(req.params.name, req.params.type as DeviceType);
         if (!device) {
             res.status(400);
-            res.send({});
+            res.send({
+                error: `invalid device name`
+            });
             return;
         }
 
@@ -25,7 +27,9 @@ export class DeviceController {
 
         if (!reading) {
             res.status(500);
-            res.send({});
+            res.send({
+                error: 'undefined reading'
+            });
             return;
         }
 
@@ -36,7 +40,9 @@ export class DeviceController {
         let device = DEVICE_REPOSITORY.findDevice(req.params.name, req.params.type as DeviceType);
         if (!device) {
             res.status(400);
-            res.send({});
+            res.send({
+                error: 'invalid device name'
+            });
             return;
         }
 
