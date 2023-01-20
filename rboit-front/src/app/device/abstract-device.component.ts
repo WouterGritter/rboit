@@ -118,10 +118,14 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
   }
 
   private average<DataType extends { x: any, y: number | undefined }>(data: DataType[]): DataType[] {
-    const result: DataType[] = [];
-
     const newSize = 500;
     const averagePercentage = 0.006;
+
+    if (data.length <= newSize) {
+      return data;
+    }
+
+    const result: DataType[] = [];
 
     const step = Math.max(1, Math.floor(data.length / newSize));
     for (let i = 0; i < data.length; i += step) {
