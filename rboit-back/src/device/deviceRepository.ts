@@ -9,6 +9,7 @@ import {GoveeTemperatureDevice} from "./device/temperature/goveeTemperatureDevic
 import {DaikinOutdoorTemperatureDevice} from "./device/temperature/daikinOutdoorTemperatureDevice";
 import {RukbunkerSmartMeterPowerDevice} from "./device/power/rukbunkerSmartMeterPowerDevice";
 import {DaikinPowerDevice} from "./device/power/daikinPowerDevice";
+import {HuePowerDevice} from "./device/power/huePowerDevice";
 
 class DeviceRepository {
 
@@ -30,6 +31,7 @@ class DeviceRepository {
         this.devices.push(new TapoPowerDevice('rb-kachel-slaapkamer', '10.43.60.70'));
         this.devices.push(new TapoPowerDevice('rb-boiler', '10.43.60.69'));
         this.devices.push(new RukbunkerSmartMeterPowerDevice());
+        this.devices.push(new HuePowerDevice());
 
         // Temperature devices
         this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.76'));
