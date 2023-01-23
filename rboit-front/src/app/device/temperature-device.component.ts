@@ -3,7 +3,7 @@ import {DeviceHistoryConfigService} from "./service/device-history-config.servic
 import {TemperatureDeviceService, TemperatureReading} from "./service/temperature-device.service";
 import {AbstractDeviceComponent, ChartData} from "./abstract-device.component";
 import {IsHandsetService} from "../is-handset.service";
-import {calculateRange} from "../helpers/mathHelpers";
+import {formatTimeFromDate} from "../helpers/timeHelpers";
 
 @Component({
   selector: 'app-temperature-device',
@@ -52,26 +52,31 @@ export class TemperatureDeviceComponent extends AbstractDeviceComponent<Temperat
         {
           axisYType: 'primary',
           type: 'line',
-          yValueFormatString: '0.0°C',
           color: '#FF5C5C',
-          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'temperature')),
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'temperature', '°C')),
         },
         {
           axisYType: 'secondary',
           type: 'line',
-          yValueFormatString: '0.0%',
           color: '#8A8AFF',
-          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'humidity')),
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'humidity', '%')),
         }
       ]
     };
   }
 
-  private readingToDataPoint(reading: TemperatureReading, value: 'temperature' | 'humidity') {
+  private readingToDataPoint(reading: TemperatureReading, fieldName: 'temperature' | 'humidity', units: string) {
+    const value = reading[fieldName];
+    let toolTipContent = formatTimeFromDate(reading.date);
+    if (value !== undefined) {
+      toolTipContent = `${toolTipContent}: ${value.toFixed(1)}${units}`;
+    }
+
     return {
       x: reading.date,
-      y: reading[value],
+      y: value,
       markerSize: 1,
+      toolTipContent,
     };
   }
 }

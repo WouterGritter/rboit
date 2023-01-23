@@ -4,6 +4,7 @@ import {DeviceHistoryConfigService} from "./service/device-history-config.servic
 import {AbstractDeviceComponent, ChartData} from "./abstract-device.component";
 import {IsHandsetService} from "../is-handset.service";
 import {calculateRange} from "../helpers/mathHelpers";
+import {formatTimeFromDate} from "../helpers/timeHelpers";
 
 @Component({
   selector: 'app-power-device',
@@ -29,7 +30,7 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
   }
 
   override parseReadings(name: string, history: PowerReading[], lastReading: PowerReading | undefined): ChartData {
-    return {
+    const data: ChartData = {
       title: this.generateTitle(name, lastReading),
       axisY: {
         suffix: 'W',
@@ -56,6 +57,12 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
         }
       ],
     };
+
+    if (!this.hasAnyValue(history, 'voltage')) {
+      delete data['axisY2'];
+    }
+
+    return data;
   }
 
   private generateTitle(name: string, lastReading: PowerReading | undefined): string {
@@ -84,11 +91,30 @@ export class PowerDeviceComponent extends AbstractDeviceComponent<PowerReading> 
     return Math.min(...powers) < 0 && Math.max(...powers) <= 0;
   }
 
-  private readingToDataPoint(reading: PowerReading, value: 'power' | 'voltage' | 'amperage') {
+  private hasAnyValue(history: PowerReading[], fieldName: 'power' | 'voltage' | 'amperage'): boolean {
+    for (let reading of history) {
+      if (reading[fieldName] !== undefined) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  private readingToDataPoint(reading: PowerReading, fieldName: 'power' | 'voltage' | 'amperage') {
+    let toolTipContent = formatTimeFromDate(reading.date);
+    if (reading.power !== undefined) {
+      toolTipContent = `${toolTipContent}: ${reading.power.toFixed(0)}W`;
+    }
+    if (reading.voltage !== undefined) {
+      toolTipContent = `${toolTipContent} / ${reading.voltage.toFixed(0)}V`;
+    }
+
     return {
       x: reading.date,
-      y: reading[value],
+      y: reading[fieldName],
       markerSize: 1,
+      toolTipContent,
     };
   }
 }

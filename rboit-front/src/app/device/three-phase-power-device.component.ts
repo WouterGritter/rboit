@@ -1,9 +1,10 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {PowerDeviceService, PowerReading} from "./service/power-device.service";
 import {DeviceHistoryConfigService} from "./service/device-history-config.service";
 import {AbstractDeviceComponent, ChartData} from "./abstract-device.component";
 import {IsHandsetService} from "../is-handset.service";
 import {calculateRange} from "../helpers/mathHelpers";
+import {formatTimeFromDate} from "../helpers/timeHelpers";
 
 @Component({
   selector: 'app-three-phase-power-device',
@@ -11,6 +12,9 @@ import {calculateRange} from "../helpers/mathHelpers";
   styleUrls: ['./abstract-device.component.css']
 })
 export class ThreePhasePowerDeviceComponent extends AbstractDeviceComponent<PowerReading> {
+
+  @Input()
+  fieldName: 'power' | 'voltage' = 'power';
 
   constructor(private deviceService: PowerDeviceService, private historyConfigService: DeviceHistoryConfigService, private isHandsetService: IsHandsetService) {
     super();
@@ -33,20 +37,20 @@ export class ThreePhasePowerDeviceComponent extends AbstractDeviceComponent<Powe
       title: this.generateTitle(name, lastReading),
       axisY: {
         suffix: 'W',
-        ...this.calculateMinMax(history),
+        ...this.calculateMinMax(history, this.fieldName),
       },
       data: [
         {
           type: 'line',
-          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'L1', 'power')),
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'L1', this.fieldName)),
         },
         {
           type: 'line',
-          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'L2', 'power')),
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'L2', this.fieldName)),
         },
         {
           type: 'line',
-          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'L3', 'power')),
+          dataPoints: history.map(reading => this.readingToDataPoint(reading, 'L3', this.fieldName)),
         },
       ],
     };
@@ -62,32 +66,36 @@ export class ThreePhasePowerDeviceComponent extends AbstractDeviceComponent<Powe
     return title;
   }
 
-  private calculateMinMax(history: PowerReading[]): { minimum: number, maximum: number } {
-    const l1 = history.map(reading => reading.L1?.power || 0);
-    const l2 = history.map(reading => reading.L2?.power || 0);
-    const l3 = history.map(reading => reading.L3?.power || 0);
+  private calculateMinMax(history: PowerReading[], fieldName: 'power' | 'voltage'): { minimum: number, maximum: number } {
+    if (fieldName === 'voltage') {
+      return {
+        minimum: 200,
+        maximum: 250,
+      };
+    } else {
+      const l1 = history.map(reading => reading.L1?.power || 0);
+      const l2 = history.map(reading => reading.L2?.power || 0);
+      const l3 = history.map(reading => reading.L3?.power || 0);
 
-    return calculateRange([...l1, ...l2, ...l3, 0], 100);
+      return calculateRange([...l1, ...l2, ...l3, 0], 100);
+    }
   }
 
-  private readingToDataPoint(reading: PowerReading, phaseName: 'L1' | 'L2' | 'L3', valueName: 'power' | 'voltage' | 'amperage') {
-    const time = String(reading.date.getHours()).padStart(2, '0') + ':' + String(reading.date.getMinutes()).padStart(2, '0') + ':' + String(reading.date.getSeconds()).padStart(2, '0');
-
+  private readingToDataPoint(reading: PowerReading, phaseName: 'L1' | 'L2' | 'L3', fieldName: 'power' | 'voltage' | 'amperage') {
     const phase = reading[phaseName];
-    const value = phase !== undefined ? phase[valueName] : undefined;
-    if (value === undefined) {
-      return {
-        x: reading.date,
-        y: undefined,
-        markerSize: 1,
-      }
-    } else {
-      return {
-        x: reading.date,
-        y: value,
-        markerSize: 1,
-        toolTipContent: `[${phaseName}] ${time}: ${Math.round(value)}W`,
-      };
+    let toolTipContent = `[${phaseName}] ${formatTimeFromDate(reading.date)}`;
+    if (phase?.power !== undefined) {
+      toolTipContent = `${toolTipContent}: ${phase.power.toFixed(0)}W`;
     }
+    if (phase?.voltage !== undefined) {
+      toolTipContent = `${toolTipContent} / ${phase.voltage.toFixed(0)}V`;
+    }
+
+    return {
+      x: reading.date,
+      y: phase !== undefined ? phase[fieldName] : undefined,
+      markerSize: 1,
+      toolTipContent,
+    };
   }
 }
