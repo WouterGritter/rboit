@@ -5,7 +5,8 @@ import {discordClient} from "./discordClient";
 const INTERVAL = 24 * 60 * 60 * 1000; // 1 day
 const BATTERY_THRESHOLD = 25;
 const DEVICES = [
-    'rb-temperature'
+    'rb-temp-woonkamer',
+    'rb-temp-slaapkamer',
 ];
 
 export function startGoveeBatteryMonitor(): void {
