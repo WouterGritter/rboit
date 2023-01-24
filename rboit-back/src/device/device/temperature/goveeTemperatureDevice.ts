@@ -25,7 +25,7 @@ export class GoveeTemperatureDevice extends CachedDevice<TemperatureReading> {
 
     private toTemperatureReading(reading: GoveeTemperatureReading): TemperatureReading {
         return {
-            date: new Date(reading.epochTime * 1000),
+            date: new Date(reading.epochTime),
             temperature: reading.temperature,
             humidity: reading.humidity,
             source: reading,
@@ -35,6 +35,8 @@ export class GoveeTemperatureDevice extends CachedDevice<TemperatureReading> {
 
 export declare type GoveeTemperatureReading = {
     epochTime: number;
+    address: string;
+    name: string;
     temperature: number;
     humidity: number;
     battery: number;
