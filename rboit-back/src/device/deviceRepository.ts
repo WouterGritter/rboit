@@ -35,8 +35,9 @@ class DeviceRepository {
 
         // Temperature devices
         this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.76'));
-        this.devices.push(new GoveeTemperatureDevice('rb-temperature', 'A4:C1:38:10:4F:D9'));
-        this.devices.push(new DaikinOutdoorTemperatureDevice('rb-outdoor', '10.43.60.66'));
+        this.devices.push(new GoveeTemperatureDevice('rb-temp-woonkamer', 'A4:C1:38:10:4F:D9'));
+        this.devices.push(new GoveeTemperatureDevice('rb-temp-slaapkamer', 'A4:C1:38:D5:D9:2C'));
+        this.devices.push(new DaikinOutdoorTemperatureDevice('rb-temp-outdoor', '10.43.60.66'));
 
         let historyManager = new DeviceHistoryManager(this.devices, this.historyConfig);
         historyManager.startTimer();
