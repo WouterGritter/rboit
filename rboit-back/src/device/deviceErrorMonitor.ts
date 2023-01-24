@@ -4,7 +4,7 @@ const MAX_AGE = 1000 * 60 * 60; // 1 hour
 
 const WARNING_MESSAGE_INTERVAL = 1000 * 60 * 60 * 24; // 1 day
 
-const ERROR_WARNING_THRESHOLD = 1;
+const ERROR_WARNING_THRESHOLD = 100;
 
 const errorEntries: { [deviceName: string]: undefined | ErrorEntry[] } = {};
 const lastWarningDates: { [deviceName: string]: undefined | Date } = {};
