@@ -82,6 +82,11 @@ def route__get_addresses():
     return list(last_readings.keys())
 
 
+@app.route('/all')
+def route__all():
+    return last_readings
+
+
 @app.route('/<address>')
 def route__get_reading(address):
     if address not in last_readings:
