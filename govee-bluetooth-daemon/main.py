@@ -50,18 +50,19 @@ def on_advertisement(advertisement):
     name = advertisement.name
 
     if mfg_data is not None and name is not None:
-        if name in ['GVH5177_9835']:
-            values = int.from_bytes(mfg_data[4:7], 'big')
-            temp = float(values / 10000)
-            hum = float((values % 1000) / 10)
-            bat = mfg_data[7]
-            data_callback(address, name, temp, hum, bat)
-        elif name in ['GVH5075_391D', 'GVH5075_4FD9', 'GVH5075_D92C']:
+        if name in ['GVH5075_4FD9', 'GVH5075_D92C']:
             values = int.from_bytes(mfg_data[3:6], 'big')
             temp = float(values / 10000)
             hum = float((values % 1000) / 10)
             bat = mfg_data[6]
             data_callback(address, name, temp, hum, bat)
+
+        # Other models might use this format:
+        # values = int.from_bytes(mfg_data[4:7], 'big')
+        # temp = float(values / 10000)
+        # hum = float((values % 1000) / 10)
+        # bat = mfg_data[7]
+        # data_callback(address, name, temp, hum, bat)
 
 
 print('Hello, world')
