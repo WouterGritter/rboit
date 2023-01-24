@@ -57,7 +57,7 @@ function shouldSendWarningMessage(deviceName: string, entries: ErrorEntry[]): bo
 function sendWarningMessage(deviceName: string, entries: ErrorEntry[], lastError: ErrorEntry): void {
     lastWarningDates[deviceName] = new Date();
 
-    let message = `:warning: High error count for device ${deviceName}! Received ${entries.length} errors in the last hour. Error message: ${String(lastError.error)}`;
+    let message = `:warning: High error count for device **${deviceName}**! Received ${entries.length} errors in the last hour. \`${String(lastError.error)}\``;
 
     if (lastError.error.stack !== undefined) {
         message += '\n```\n' + lastError.error.stack + '\n```';
