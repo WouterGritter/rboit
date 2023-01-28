@@ -1,5 +1,6 @@
 import {Device, DeviceType} from "./device";
 import {onDeviceError} from "../deviceErrorMonitor";
+import {DeferredPromise} from "../../util/deferredPromise";
 
 const DEVICE_CACHE_MAX_AGE = parseInt(process.env.DEVICE_CACHE_MAX_AGE);
 console.log(`DEVICE_CACHE_MAX_AGE=${DEVICE_CACHE_MAX_AGE}`);
@@ -10,10 +11,12 @@ export abstract class CachedDevice<T> implements Device<T> {
     readonly abstract type: DeviceType;
 
     private ready: boolean = false;
-    private fetching: boolean = false;
     private cachedReading: T | undefined;
     private cachedReadingDate: number = 0;
     private readonly maxCacheAge: number;
+
+    private fetching: boolean = false;
+    private cachedPromises: DeferredPromise<T>[] = [];
 
     constructor(maxCacheAge?: number | undefined) {
         this.maxCacheAge = maxCacheAge || DEVICE_CACHE_MAX_AGE;
@@ -44,27 +47,33 @@ export abstract class CachedDevice<T> implements Device<T> {
             return Promise.reject(`Device ${this.name} not ready yet.`);
         }
 
-        if (this.shouldRefreshCache()) {
-            if (this.fetching) {
-                // TODO: Maybe somehow wait and return the result of the pending fetch?
-                return Promise.resolve(this.cachedReading);
-            }
+        if (this.fetching) {
+            // Store the promise so we can resolve it later
+            const deferred = new DeferredPromise<T>();
+            this.cachedPromises.push(deferred);
 
+            return deferred.promise();
+        }
+
+        if (this.shouldRefreshCache()) {
             this.fetching = true;
             try {
                 this.cachedReading = await retry(() => this.getActualReading());
             } catch (e) {
                 this.fetching = false;
                 onDeviceError(this.name, e);
+
+                this.cachedPromises.forEach(deferred => deferred.reject(e));
+                this.cachedPromises = [];
                 return Promise.reject(e);
             }
 
             this.cachedReadingDate = new Date().getTime();
             this.fetching = false;
-        }
 
-        if (this.cachedReading === undefined) {
-            return Promise.reject('Reading is undefined even after refreshing the cache.');
+            this.cachedPromises.forEach(deferred => deferred.resolve(this.cachedReading));
+            this.cachedPromises = [];
+            return Promise.resolve(this.cachedReading);
         }
 
         return Promise.resolve(this.cachedReading);
