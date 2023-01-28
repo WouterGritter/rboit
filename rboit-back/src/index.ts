@@ -6,6 +6,7 @@ import express from "express";
 import {router} from "./router";
 import {startGoveeBatteryMonitor} from "./goveeBatteryMonitor";
 import {startRukbunkerEnergyLogger} from "./rukbunkerEnergyLogger";
+import {startRukbunkerSolarEnergyLogger} from "./rukbunkerSolarEnergyLogger";
 
 
 const app = express();
@@ -19,3 +20,4 @@ app.listen(port, () => {
 
 startGoveeBatteryMonitor();
 startRukbunkerEnergyLogger();
+startRukbunkerSolarEnergyLogger();
