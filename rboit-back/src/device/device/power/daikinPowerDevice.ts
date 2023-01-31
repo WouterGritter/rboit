@@ -12,7 +12,7 @@ export class DaikinPowerDevice extends CachedDevice<PowerReading> {
     private readonly device: AirconditionerDaikinDevice;
 
     constructor(name: string, address: string) {
-        super();
+        super(1000 * 60);
 
         this.name = name;
         this.device = new AirconditionerDaikinDevice({
@@ -32,13 +32,8 @@ export class DaikinPowerDevice extends CachedDevice<PowerReading> {
 
         const averagePower = (reading.curr_day_heat[lastHourIndex] + reading.curr_day_cool[lastHourIndex]) * 100;
 
-        const date = new Date();
-        date.setMinutes(0);
-        date.setSeconds(0);
-        date.setMilliseconds(0);
-
         return {
-            date: date,
+            date: new Date(),
             power: averagePower,
             source: reading,
         };

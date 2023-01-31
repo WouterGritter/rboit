@@ -82,7 +82,7 @@ export abstract class CachedDevice<T> implements Device<T> {
     abstract getActualReading(): Promise<T>;
 
     private shouldRefreshCache(): boolean {
-        return this.cachedReading === undefined || new Date().getTime() - this.cachedReadingDate > DEVICE_CACHE_MAX_AGE;
+        return this.cachedReading === undefined || new Date().getTime() - this.cachedReadingDate > this.maxCacheAge;
     }
 }
 
