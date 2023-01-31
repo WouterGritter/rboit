@@ -9,9 +9,6 @@ export async function ensureRedisConnected() {
         await redisClient.connect();
         console.log('Connected to redis.');
     }catch(ignored) { }
-    if (redisClient.isReady) {
-        return;
-    }
 }
 
 export async function redisGet<T>(key: string): Promise<T | undefined> {

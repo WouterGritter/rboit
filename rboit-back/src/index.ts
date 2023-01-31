@@ -4,10 +4,11 @@ dotenv.config();
 
 import express from "express";
 import {router} from "./router";
-import {startGoveeBatteryMonitor} from "./goveeBatteryMonitor";
-import {startRukbunkerEnergyLogger} from "./rukbunkerEnergyLogger";
-import {startRukbunkerSolarEnergyLogger} from "./rukbunkerSolarEnergyLogger";
 import {ensureRedisConnected} from "./redisClient";
+import {Service} from "./service/service";
+import {GoveeBatteryMonitorService} from "./service/goveeBatteryMonitorService";
+import {RukbunkerEnergyLoggerService} from "./service/rukbunkerEnergyLoggerService";
+import {RukbunkerSolarEnergyLoggerService} from "./service/rukbunkerSolarEnergyLoggerService";
 
 (async () => {
     await ensureRedisConnected();
@@ -15,13 +16,17 @@ import {ensureRedisConnected} from "./redisClient";
     const app = express();
     const port = process.env.PORT || '80';
 
+    const services: Service[] = [
+        new GoveeBatteryMonitorService(),
+        new RukbunkerEnergyLoggerService(),
+        new RukbunkerSolarEnergyLoggerService(),
+    ];
+
     app.use(router);
 
     app.listen(port, () => {
         console.log(`Listening on http://0.0.0.0:${port}`);
     });
 
-    startGoveeBatteryMonitor();
-    startRukbunkerEnergyLogger();
-    startRukbunkerSolarEnergyLogger();
+    services.forEach(service => service.start());
 })();
