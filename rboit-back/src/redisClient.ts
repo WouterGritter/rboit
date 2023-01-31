@@ -5,18 +5,13 @@ const redisClient = createClient({
 })
 
 export async function ensureRedisConnected() {
+    try{
+        await redisClient.connect();
+        console.log('Connected to redis.');
+    }catch(ignored) { }
     if (redisClient.isReady) {
         return;
     }
-
-    console.log('Connecting to redis...');
-    try{
-        await redisClient.disconnect()
-    }catch(ignored) { }
-
-    await redisClient.connect();
-
-    console.log('Connected to redis.');
 }
 
 export async function redisGet<T>(key: string): Promise<T | undefined> {
