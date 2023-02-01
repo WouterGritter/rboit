@@ -9,6 +9,7 @@ import {Service} from "./service/service";
 import {GoveeBatteryMonitorService} from "./service/goveeBatteryMonitorService";
 import {RukbunkerEnergyLoggerService} from "./service/rukbunkerEnergyLoggerService";
 import {RukbunkerSolarEnergyLoggerService} from "./service/rukbunkerSolarEnergyLoggerService";
+import {AndledonSmartMeterMessageLoggerService} from "./service/andledonSmartMeterMessageLoggerService";
 
 (async () => {
     await ensureRedisConnected();
@@ -20,6 +21,7 @@ import {RukbunkerSolarEnergyLoggerService} from "./service/rukbunkerSolarEnergyL
         new GoveeBatteryMonitorService(),
         new RukbunkerEnergyLoggerService(),
         new RukbunkerSolarEnergyLoggerService(),
+        new AndledonSmartMeterMessageLoggerService(),
     ];
 
     app.use(router);
