@@ -30,7 +30,18 @@ export class DaikinPowerDevice extends CachedDevice<PowerReading> {
         let lastHourIndex = new Date().getHours() - 1;
         if (lastHourIndex < 0) lastHourIndex += 24;
 
-        const averagePower = (reading.curr_day_heat[lastHourIndex] + reading.curr_day_cool[lastHourIndex]) * 100;
+        let heat_powers: number[];
+        let cool_powers: number[];
+
+        if (lastHourIndex === 23) {
+            heat_powers = reading.prev_1day_heat;
+            cool_powers = reading.prev_1day_cool;
+        } else {
+            heat_powers = reading.curr_day_heat;
+            cool_powers = reading.curr_day_cool;
+        }
+
+        const averagePower = (heat_powers[lastHourIndex] + cool_powers[lastHourIndex]) * 100;
 
         return {
             date: new Date(),
