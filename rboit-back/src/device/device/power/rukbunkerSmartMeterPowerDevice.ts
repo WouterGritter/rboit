@@ -14,7 +14,8 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
             .then(response => response.json() as Promise<DTS353FReading>);
 
         const andledonReading = await DEVICE_REPOSITORY.findDevice<PowerReading>('andledon-smart-meter', 'power')
-            .getReading();
+            .getReading()
+            .then(reading => reading.source as AndledonSmartMeterReading);
 
         return this.toPowerReading(reading, andledonReading);
     }
@@ -27,12 +28,12 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
         return {power, voltage, amperage};
     }
 
-    private toPowerReading(reading: DTS353FReading, andledonReading: PowerReading): PowerReading {
+    private toPowerReading(reading: DTS353FReading, andledonReading: AndledonSmartMeterReading): PowerReading {
         const L1 = this.toPowerReadingValues(reading, 'l1');
         const L2 = this.toPowerReadingValues(reading, 'l2');
         const L3 = this.toPowerReadingValues(reading, 'l3');
 
-        if (andledonReading.L3.power < L3.power) {
+        if (andledonReading.current_readings.L3.power_redelivery > 0) {
             // Rukbunker can redeliver on L3. So we are definitely redelivering.
             L3.power *= -1;
             L3.amperage *= -1;
