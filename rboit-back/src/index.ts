@@ -24,6 +24,7 @@ import {AndledonSmartMeterMessageLoggerService} from "./service/andledonSmartMet
         new AndledonSmartMeterMessageLoggerService(),
     ];
 
+    app.use(express.json());
     app.use(router);
 
     app.listen(port, () => {

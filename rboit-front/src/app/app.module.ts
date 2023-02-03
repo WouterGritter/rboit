@@ -28,6 +28,7 @@ import { DevicesViewComponent } from './device/devices-view/devices-view.compone
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ThreePhasePowerDeviceComponent} from "./device/three-phase-power-device.component";
 import { RbPowerPageComponent } from './pages/rb-power-page/rb-power-page.component';
+import { ChimeButtonComponent } from './rb-doorbell/chime-button/chime-button.component';
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 @NgModule({
@@ -45,6 +46,7 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     DevicesViewComponent,
     ThreePhasePowerDeviceComponent,
     RbPowerPageComponent,
+    ChimeButtonComponent,
   ],
   imports: [
     BrowserModule,
