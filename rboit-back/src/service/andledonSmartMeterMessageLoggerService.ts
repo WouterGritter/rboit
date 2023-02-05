@@ -12,6 +12,10 @@ export class AndledonSmartMeterMessageLoggerService extends Service {
         scheduleTask(() => this.checkForNewMessage(), withDelay(10, 'seconds'), true);
     }
 
+    getDeviceDependencies(): string[] {
+        return ['andledon-smart-meter'];
+    }
+
     private async checkForNewMessage() {
         const currMessage = await this.getCurrentMessage();
         if (currMessage !== this.lastMessage) {

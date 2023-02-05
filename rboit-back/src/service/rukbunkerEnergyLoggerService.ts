@@ -9,6 +9,10 @@ export class RukbunkerEnergyLoggerService extends Service {
         scheduleTask(() => this.logRukbunkerEnergyUsage(), 'next-month', true);
     }
 
+    getDeviceDependencies(): string[] {
+        return ['rb-smart-meter'];
+    }
+
     private async logRukbunkerEnergyUsage(): Promise<void> {
         const device = DEVICE_REPOSITORY.findDevice('rb-smart-meter', 'power') as RukbunkerSmartMeterPowerDevice;
         const reading = await device.getReading();

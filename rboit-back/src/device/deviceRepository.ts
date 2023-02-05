@@ -53,9 +53,9 @@ class DeviceRepository {
             .filter(d => d.type === type);
     }
 
-    findDevice<T>(name: string, type: DeviceType): Device<T> {
+    findDevice<T>(name: string, type?: DeviceType | undefined): Device<T> | undefined {
         return this.devices
-            .find(d => d.name === name && d.type === type);
+            .find(d => d.name === name && (type === undefined || d.type === type));
     }
 
     getHistoryConfig(): DeviceHistoryConfig {

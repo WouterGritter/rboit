@@ -18,6 +18,8 @@ export abstract class CachedDevice<T> implements Device<T> {
     private fetching: boolean = false;
     private cachedPromises: DeferredPromise<T>[] = [];
 
+    private readyPromises: DeferredPromise<string>[] | undefined = [];
+
     constructor(maxCacheAge?: number | undefined) {
         this.maxCacheAge = maxCacheAge || DEVICE_CACHE_MAX_AGE;
 
@@ -32,6 +34,9 @@ export abstract class CachedDevice<T> implements Device<T> {
 
                 this.ready = true;
                 console.log(`Device ${this.name} is now ready.`);
+
+                this.readyPromises.forEach(deferred => deferred.resolve(this.name));
+                this.readyPromises = undefined;
             })
             .catch(reason => {
                 console.log(`Error on first request of device ${this.name}: ${reason}`);
@@ -40,6 +45,24 @@ export abstract class CachedDevice<T> implements Device<T> {
 
                 setTimeout(() => this.performReadyRequest(), 5000);
             });
+    }
+
+    async waitForReady(): Promise<string> {
+        if (this.ready) {
+            return Promise.resolve<string>(this.name);
+        } else {
+            if (this.readyPromises === undefined) {
+                throw new Error(`Device ${this.name} is ready, but this.readyPromises is undefined.`);
+            }
+
+            const deferred = new DeferredPromise<string>();
+            this.readyPromises.push(deferred);
+            return deferred.promise();
+        }
+    }
+
+    isReady(): boolean {
+        return this.ready;
     }
 
     async getReading(): Promise<T> {

@@ -6,4 +6,6 @@ export interface Device<T> {
     readonly history: T[];
 
     getReading(): Promise<T>;
+    isReady(): boolean;
+    waitForReady(): Promise<string>;
 }

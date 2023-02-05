@@ -12,8 +12,11 @@ export class GoveeBatteryMonitorService extends Service {
     ];
 
     start(): void {
-        console.log('Now monitoring govee battery!');
         scheduleTask(() => this.checkGoveeBattery(), 'next-midnight', true);
+    }
+
+    getDeviceDependencies(): string[] {
+        return this.deviceNames;
     }
 
     private async checkGoveeBattery(): Promise<void> {

@@ -9,14 +9,16 @@ import {scheduleTask} from "./scheduledTask";
 export class RukbunkerSolarEnergyLoggerService extends Service {
     async start(): Promise<void> {
         if (await this.getLastWattHours() === undefined) {
-            await sleep(30 * 1000); // Wait for device to be ready...
-
             console.log('Last rukbunker total solar energy generation was not present in redis. Loading value from device...');
             const totalWattHours = await this.getTotalRBSolarWattHours();
             await this.setLastWattHours(totalWattHours);
         }
 
         scheduleTask(() => this.logRukbunkerSolarGeneration(), 'next-midnight', true);
+    }
+
+    getDeviceDependencies(): string[] {
+        return ['rb-solar'];
     }
 
     private async logRukbunkerSolarGeneration() {
