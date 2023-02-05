@@ -24,7 +24,13 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
         const wattHoursToday = totalWattHours - await this.getLastWattHours();
         await this.setLastWattHours(totalWattHours);
 
-        const message = `:sunny: Rukbunker generation today: \`${wattHoursToday}\` Wh`;
+        let message;
+        if (wattHoursToday < 0) {
+            message = ':sunny: Could not measure the Rukbunker generation today, most likely due to the inverter experiencing a power loss... :(';
+        } else {
+            message = `:sunny: Rukbunker generation today: \`${wattHoursToday}\` Wh`;
+        }
+
         await discordClient.send(message);
     }
 
