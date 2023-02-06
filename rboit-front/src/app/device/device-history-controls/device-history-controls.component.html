@@ -11,3 +11,10 @@
   [checked]="historyConfigService.getAverageHistoryValues().getValue()"
   (change)="updateAverageValues($event)"
 >Average values</mat-slide-toggle>
+
+<mat-slide-toggle
+  *ngIf="enablePowerControls"
+  class="control-element"
+  [checked]="historyConfigService.getEnableThreePhaseGraph().getValue()"
+  (change)="updateEnableThreePhase($event)"
+>3-phase graphs</mat-slide-toggle>

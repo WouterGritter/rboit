@@ -23,7 +23,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatButtonModule} from "@angular/material/button";
 import { NavigationComponent } from './navigation/navigation.component';
 import { RandomMemeComponent } from './random-meme/random-meme.component';
-import { DeviceLocalHistoryLengthControlsComponent } from './device/device-local-history-length-controls/device-local-history-length-controls.component';
+import { DeviceHistoryControlsComponent } from './device/device-history-controls/device-history-controls.component';
 import { DevicesViewComponent } from './device/devices-view/devices-view.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ThreePhasePowerDeviceComponent} from "./device/three-phase-power-device.component";
@@ -42,7 +42,7 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     IndexPageComponent,
     NavigationComponent,
     RandomMemeComponent,
-    DeviceLocalHistoryLengthControlsComponent,
+    DeviceHistoryControlsComponent,
     DevicesViewComponent,
     ThreePhasePowerDeviceComponent,
     RbPowerPageComponent,

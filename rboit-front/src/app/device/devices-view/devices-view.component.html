@@ -2,8 +2,8 @@
   <div class="column" *ngFor="let columnIndex of columnIndices">
     <div *ngFor="let device of devices; let i = index;">
       <div *ngIf="i % columnAmount === columnIndex">
-        <app-power-device *ngIf="device.type === 'power'" [name]="device.name"></app-power-device>
-        <app-three-phase-power-device *ngIf="device.type === 'three-phase-power'" [name]="device.name"></app-three-phase-power-device>
+        <app-power-device *ngIf="device.type === 'power' || (device.type === 'three-phase-power' && !enableThreePhase)" [name]="device.name"></app-power-device>
+        <app-three-phase-power-device *ngIf="device.type === 'three-phase-power' && enableThreePhase" [name]="device.name"></app-three-phase-power-device>
         <app-temperature-device *ngIf="device.type === 'temperature'" [name]="device.name"></app-temperature-device>
       </div>
     </div>

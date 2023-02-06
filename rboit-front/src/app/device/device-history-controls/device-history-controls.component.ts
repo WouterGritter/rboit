@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {DeviceHistoryConfigService} from "../service/device-history-config.service";
 import {MatSlideToggleChange} from "@angular/material/slide-toggle/slide-toggle";
 
 @Component({
-  selector: 'app-device-local-history-length-controls',
-  templateUrl: './device-local-history-length-controls.component.html',
-  styleUrls: ['./device-local-history-length-controls.component.css']
+  selector: 'app-device-history-controls',
+  templateUrl: './device-history-controls.component.html',
+  styleUrls: ['./device-history-controls.component.css']
 })
-export class DeviceLocalHistoryLengthControlsComponent implements OnInit {
+export class DeviceHistoryControlsComponent implements OnInit {
 
   buttons = [
     {seconds: 60 * 15, label: '15 minutes', disabled: false},
@@ -15,6 +15,9 @@ export class DeviceLocalHistoryLengthControlsComponent implements OnInit {
     {seconds: 60 * 60 * 8, label: '8 hours', disabled: false},
     {seconds: 60 * 60 * 24, label: '1 day', disabled: false},
   ];
+
+  @Input()
+  enablePowerControls: boolean = false;
 
   constructor(public historyConfigService: DeviceHistoryConfigService) {
     this.historyConfigService.getLocalHistoryLength().subscribe(milliseconds => {
@@ -34,8 +37,11 @@ export class DeviceLocalHistoryLengthControlsComponent implements OnInit {
     this.historyConfigService.getLocalHistoryLength().next(seconds * 1000);
   }
 
-  updateAverageValues(e: MatSlideToggleChange) {
-    this.historyConfigService.getAverageHistoryValues().next(e.checked);
+  updateAverageValues(event: MatSlideToggleChange) {
+    this.historyConfigService.getAverageHistoryValues().next(event.checked);
   }
 
+  updateEnableThreePhase(event: MatSlideToggleChange) {
+    this.historyConfigService.getEnableThreePhaseGraph().next(event.checked);
+  }
 }

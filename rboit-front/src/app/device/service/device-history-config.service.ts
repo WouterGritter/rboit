@@ -12,6 +12,7 @@ export class DeviceHistoryConfigService {
 
   private localHistoryLength: BehaviorSubject<number> = new BoundBehaviorSubject<number>('localHistoryLength', Infinity);
   private averageHistoryValues: BehaviorSubject<boolean> = new BoundBehaviorSubject<boolean>('averageHistoryValues', false);
+  private enableThreePhaseGraph: BehaviorSubject<boolean> = new BoundBehaviorSubject<boolean>('enableThreePhaseGraph', true);
 
   constructor(private http: HttpClient) {
     this.http.get<RemoteDeviceHistoryConfig>('/api/device/historyConfig')
@@ -28,6 +29,10 @@ export class DeviceHistoryConfigService {
 
   getAverageHistoryValues() {
     return this.averageHistoryValues;
+  }
+
+  getEnableThreePhaseGraph() {
+    return this.enableThreePhaseGraph;
   }
 }
 
