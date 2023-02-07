@@ -2,45 +2,57 @@ import {DEVICE_REPOSITORY} from "../device/deviceRepository";
 import {discordClient} from "../discordClient";
 import {RukbunkerSolarPowerDevice, RukbunkerSolarReading} from "../device/device/power/rukbunkerSolarPowerDevice";
 import {redisGet, redisSet} from "../redisClient";
-import {sleep} from "../util/sleep";
 import {Service} from "./service";
-import {scheduleTask} from "./scheduledTask";
+import {scheduleTask, withDelay} from "./scheduledTask";
 
 export class RukbunkerSolarEnergyLoggerService extends Service {
+    private wasGenerating: boolean;
+
     async start(): Promise<void> {
-        if (await this.getLastWattHours() === undefined) {
-            console.log('Last rukbunker total solar energy generation was not present in redis. Loading value from device...');
-            const totalWattHours = await this.getTotalRBSolarWattHours();
-            await this.setLastWattHours(totalWattHours);
+        const state = await this.getSolarState();
+
+        this.wasGenerating = state.isGenerating;
+        if (!state.isGenerating || await this.getLastWattHours() === undefined) {
+            await this.setLastWattHours(state.wattHours);
         }
 
-        scheduleTask(() => this.logRukbunkerSolarGeneration(), 'next-midnight', true);
+        scheduleTask(() => this.update(), withDelay(5, 'minutes'), true);
     }
 
     getDeviceDependencies(): string[] {
         return ['rb-solar'];
     }
 
-    private async logRukbunkerSolarGeneration() {
-        const totalWattHours = await this.getTotalRBSolarWattHours();
-        const wattHoursToday = totalWattHours - await this.getLastWattHours();
-        await this.setLastWattHours(totalWattHours);
+    private async update() {
+        const state = await this.getSolarState();
 
-        let message;
-        if (wattHoursToday < 0) {
-            message = ':sunny: Could not measure the Rukbunker generation today, most likely due to the inverter experiencing a power loss... :(';
-        } else {
-            message = `:sunny: Rukbunker generation today: \`${wattHoursToday}\` Wh`;
+        if (this.wasGenerating && !state.isGenerating) {
+            // Stopped generating just now. Log generated watt-hours.
+            const wattHoursToday = state.wattHours - await this.getLastWattHours();
+            await this.setLastWattHours(state.wattHours);
+
+            let message;
+            if (wattHoursToday < 0) {
+                message = ':sunny: Could not measure the Rukbunker generation today, most likely due to the inverter experiencing a power loss... :(';
+            } else {
+                message = `:sunny: Rukbunker generation today: \`${wattHoursToday}\` Wh`;
+            }
+
+            await discordClient.send(message);
         }
 
-        await discordClient.send(message);
+        this.wasGenerating = state.isGenerating;
     }
 
-    private async getTotalRBSolarWattHours(): Promise<number> {
+    private async getSolarState(): Promise<{ isGenerating: boolean, wattHours: number }> {
         const device = DEVICE_REPOSITORY.findDevice('rb-solar', 'power') as RukbunkerSolarPowerDevice;
         const reading = await device.getReading();
         const solarReading = reading.source as RukbunkerSolarReading;
-        return solarReading.wattHours;
+
+        return {
+            isGenerating: reading.power !== 0,
+            wattHours: solarReading.wattHours,
+        };
     }
 
     private async getLastWattHours(): Promise<number | undefined> {
