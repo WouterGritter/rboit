@@ -5,6 +5,8 @@ import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask, withDelay} from "./scheduledTask";
 
+const KWH_PRICE = 0.67;
+
 export class RukbunkerSolarEnergyLoggerService extends Service {
     private wasGenerating: boolean;
 
@@ -35,7 +37,8 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
             if (wattHoursToday < 0) {
                 message = ':sunny: Could not measure the Rukbunker generation today, most likely due to the inverter experiencing a power loss... :(';
             } else {
-                message = `:sunny: Rukbunker generation today: \`${wattHoursToday}\` Wh`;
+                const wattHoursTodayEuros = wattHoursToday / 1000 * KWH_PRICE;
+                message = `:sunny: Rukbunker generation today: \`${wattHoursToday}\` Wh / €\`${wattHoursTodayEuros.toFixed(2)}\``;
             }
 
             await discordClient.send(message);
