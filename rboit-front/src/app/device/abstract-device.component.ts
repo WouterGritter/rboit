@@ -11,6 +11,8 @@ import {IsHandsetService} from "../is-handset.service";
 })
 export abstract class AbstractDeviceComponent<Reading extends GenericReading> implements OnInit, OnDestroy {
   @Input() name: string = '';
+  @Input() overrideHistoryLength: number | undefined = undefined;
+  @Input() overrideAverageValues: boolean | undefined = undefined;
   private chart: any;
   private historyReadings: Reading[] = [];
   private historyConfig: RemoteDeviceHistoryConfig | undefined;
@@ -97,14 +99,14 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     }
 
     const lastReading = this.historyReadings[this.historyReadings.length - 1];
-    const historyMaxAge = this.getHistoryConfigService().getLocalHistoryLength().getValue();
+    const historyMaxAge = this.overrideHistoryLength ?? this.getHistoryConfigService().getLocalHistoryLength().getValue();
     const parsed = this.parseReadings(
       this.name,
       this.historyReadings.filter(reading => this.ageOf(reading) < historyMaxAge),
       lastReading
     );
 
-    const averageHistoryValues = this.getHistoryConfigService().getAverageHistoryValues().getValue();
+    const averageHistoryValues = this.overrideAverageValues ?? this.getHistoryConfigService().getAverageHistoryValues().getValue();
     if (averageHistoryValues) {
       parsed.data.forEach(data => data.dataPoints = this.average(data.dataPoints));
     }
