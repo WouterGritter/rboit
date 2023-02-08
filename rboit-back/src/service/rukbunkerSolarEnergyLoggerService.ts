@@ -15,7 +15,7 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
 
         this.wasGenerating = state.isGenerating;
         if (!state.isGenerating || await this.getLastWattHours() === undefined) {
-            await this.setLastWattHours(state.wattHours);
+            await this.setLastWattHours(state.wattHoursTotal);
         }
 
         scheduleTask(() => this.update(), withDelay(5, 'minutes'), true);
@@ -30,15 +30,14 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
 
         if (this.wasGenerating && !state.isGenerating) {
             // Stopped generating just now. Log generated watt-hours.
-            const wattHoursToday = state.wattHours - await this.getLastWattHours();
-            await this.setLastWattHours(state.wattHours);
+            await this.setLastWattHours(state.wattHoursTotal);
+            await this.setGenerationYesterday(state.wattHoursToday);
 
             let message;
-            if (wattHoursToday < 0) {
+            if (state.wattHoursToday < 0) {
                 message = ':sunny: Could not measure the Rukbunker generation today, most likely due to the inverter experiencing a power loss... :(';
             } else {
-                const wattHoursTodayEuros = wattHoursToday / 1000 * KWH_PRICE;
-                message = `:sunny: Rukbunker generation today: \`${wattHoursToday}\` Wh / €\`${wattHoursTodayEuros.toFixed(2)}\``;
+                message = `:sunny: Rukbunker generation today: \`${state.wattHoursToday} Wh\` / \`€${state.savingsToday.toFixed(2)}\``;
             }
 
             await discordClient.send(message);
@@ -47,25 +46,48 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
         this.wasGenerating = state.isGenerating;
     }
 
-    private async getSolarState(): Promise<{ isGenerating: boolean, wattHours: number }> {
+    public async getSolarState(): Promise<SolarState> {
         const device = DEVICE_REPOSITORY.findDevice('rb-solar', 'power') as RukbunkerSolarPowerDevice;
         const reading = await device.getReading();
         const solarReading = reading.source as RukbunkerSolarReading;
 
+        const wattHoursToday = solarReading.wattHours - (await this.getLastWattHours() ?? 0);
+        const wattHoursYesterday = await this.getGenerationYesterday() ?? 0;
+
         return {
             isGenerating: reading.power !== 0,
-            wattHours: solarReading.wattHours,
+            currentPower: Math.abs(reading.power),
+            wattHoursTotal: solarReading.wattHours,
+            wattHoursToday: wattHoursToday,
+            savingsToday: Math.round(wattHoursToday / 1000 * KWH_PRICE * 100) / 100,
+            wattHoursYesterday: wattHoursYesterday,
+            savingsYesterday: Math.round(wattHoursYesterday / 1000 * KWH_PRICE * 100) / 100,
         };
     }
 
     private async getLastWattHours(): Promise<number | undefined> {
-        const value = await redisGet<number>('rb-solar-last-watt-hours');
-        console.log(`Loaded last rukbunker total solar energy generation from redis: ${value / 1000} kWh`);
-        return value;
+        return await redisGet<number>('rb-solar-last-watt-hours');
     }
 
     private async setLastWattHours(value: number): Promise<void> {
         await redisSet<number>('rb-solar-last-watt-hours', value);
-        console.log(`Stored last rukbunker total solar energy generation to redis: ${value / 1000} kWh`);
+    }
+
+    private async getGenerationYesterday(): Promise<number | undefined> {
+        return await redisGet<number>('rb-solar-generation-yesterday');
+    }
+
+    private async setGenerationYesterday(value: number): Promise<void> {
+        await redisSet<number>('rb-solar-generation-yesterday', value);
     }
 }
+
+export declare type SolarState = {
+    isGenerating: boolean;
+    currentPower: number;
+    wattHoursTotal: number;
+    wattHoursToday: number;
+    savingsToday: number;
+    wattHoursYesterday: number;
+    savingsYesterday: number;
+};
