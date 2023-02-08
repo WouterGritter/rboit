@@ -56,7 +56,7 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
 
         return {
             isGenerating: reading.power !== 0,
-            currentPower: Math.abs(reading.power),
+            currentPower: Math.round(Math.abs(reading.power) * 10) / 10,
             wattHoursTotal: solarReading.wattHours,
             wattHoursToday: wattHoursToday,
             savingsToday: Math.round(wattHoursToday / 1000 * KWH_PRICE * 100) / 100,
