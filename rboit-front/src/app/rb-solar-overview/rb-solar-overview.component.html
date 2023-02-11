@@ -1,7 +1,8 @@
 <div class="info">
-  <p>Current power: {{ solarState?.currentPower | number: '.1' }} W <mat-icon>{{ (solarState?.isGenerating ?? true) ? 'sunny' : 'dark_mode' }}</mat-icon></p>
-  <p>Generation today: {{ solarState?.wattHoursToday }} Wh / &euro;{{ solarState?.savingsToday | number: '.2' }}</p>
-  <p>Generation yesterday: {{ solarState?.wattHoursYesterday }} Wh / &euro;{{ solarState?.savingsYesterday | number: '.2' }}</p>
+  <p>Current power: {{ power.toFixed(1) }} W <span class="small">{{ efficiencyPercentage.toFixed(1) }}%</span></p>
+  <p>Power per panel: {{ powerPerPanel.toFixed(1) }}W<span class="small">/{{ config.panelWattage }}W</span></p>
+  <p>Generation today: {{ wattHoursToday }} Wh <span class="small">&euro;{{ savingsToday.toFixed(2) }}</span></p>
+  <p>Generation yesterday: {{ wattHoursYesterday }} Wh <span class="small">&euro;{{ savingsYesterday.toFixed(2) }}</span></p>
 </div>
 
 <div class="graph-container">

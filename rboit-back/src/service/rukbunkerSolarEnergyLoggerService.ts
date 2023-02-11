@@ -37,7 +37,8 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
             if (state.wattHoursToday < 0) {
                 message = ':sunny: Could not measure the Rukbunker generation today, most likely due to the inverter experiencing a power loss... :(';
             } else {
-                message = `:sunny: Rukbunker generation today: \`${state.wattHoursToday} Wh\` / \`€${state.savingsToday.toFixed(2)}\``;
+                const savings = state.wattHoursToday / 1000 * state.currentKwhPrice;
+                message = `:sunny: Rukbunker generation today: \`${state.wattHoursToday} Wh\` / \`€${savings.toFixed(2)}\``;
             }
 
             await discordClient.send(message);
@@ -51,17 +52,13 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
         const reading = await device.getReading();
         const solarReading = reading.source as RukbunkerSolarReading;
 
-        const wattHoursToday = solarReading.wattHours - (await this.getLastWattHours() ?? 0);
-        const wattHoursYesterday = await this.getGenerationYesterday() ?? 0;
-
         return {
             isGenerating: reading.power !== 0,
             currentPower: Math.round(Math.abs(reading.power) * 10) / 10,
             wattHoursTotal: solarReading.wattHours,
-            wattHoursToday: wattHoursToday,
-            savingsToday: Math.round(wattHoursToday / 1000 * KWH_PRICE * 100) / 100,
-            wattHoursYesterday: wattHoursYesterday,
-            savingsYesterday: Math.round(wattHoursYesterday / 1000 * KWH_PRICE * 100) / 100,
+            wattHoursToday: solarReading.wattHours - (await this.getLastWattHours() ?? 0),
+            wattHoursYesterday: await this.getGenerationYesterday() ?? 0,
+            currentKwhPrice: KWH_PRICE,
         };
     }
 
@@ -87,7 +84,6 @@ export declare type SolarState = {
     currentPower: number;
     wattHoursTotal: number;
     wattHoursToday: number;
-    savingsToday: number;
     wattHoursYesterday: number;
-    savingsYesterday: number;
+    currentKwhPrice: number;
 };

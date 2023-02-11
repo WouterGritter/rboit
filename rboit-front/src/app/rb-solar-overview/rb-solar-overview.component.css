@@ -3,6 +3,10 @@
   font-size: 1.3em;
 }
 
+span.small {
+  font-size: 0.675em;
+}
+
 mat-icon {
   font-size: 0.8em;
 }

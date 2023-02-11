@@ -10,7 +10,19 @@ export class RbSolarOverviewComponent implements OnInit, OnDestroy {
 
   private updateIntervalId: any | undefined;
 
-  solarState: SolarState | undefined;
+  config = {
+    panelAmount: 6,
+    panelWattage: 150,
+  };
+
+  power: number = 0;
+  powerPerPanel: number = 0;
+  efficiencyPercentage: number = 0;
+  isGenerating: boolean = true;
+  wattHoursToday: number = 0;
+  savingsToday: number = 0;
+  wattHoursYesterday: number = 0;
+  savingsYesterday: number = 0;
 
   constructor(private solarService: RbSolarService) { }
 
@@ -29,7 +41,18 @@ export class RbSolarOverviewComponent implements OnInit, OnDestroy {
 
   private updateState() {
     this.solarService.getState()
-      .subscribe(state => this.solarState = state);
+      .subscribe(state => {
+        this.power = state.currentPower;
+        this.isGenerating = state.isGenerating;
+        this.powerPerPanel = state.currentPower / this.config.panelAmount;
+        this.efficiencyPercentage = state.currentPower / (this.config.panelAmount * this.config.panelWattage) * 100;
+
+        this.wattHoursToday = state.wattHoursToday;
+        this.savingsToday = state.wattHoursToday / 1000 * state.currentKwhPrice;
+
+        this.wattHoursYesterday = state.wattHoursYesterday;
+        this.savingsYesterday = state.wattHoursYesterday / 1000 * state.currentKwhPrice;
+      });
   }
 
 }

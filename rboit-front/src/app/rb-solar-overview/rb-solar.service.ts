@@ -18,7 +18,6 @@ export declare type SolarState = {
   currentPower: number;
   wattHoursTotal: number;
   wattHoursToday: number;
-  savingsToday: number;
   wattHoursYesterday: number;
-  savingsYesterday: number;
+  currentKwhPrice: number;
 };
