@@ -4,7 +4,7 @@ import {discordClient} from "../discordClient";
 import {Service} from "./service";
 import {scheduleTask} from "./scheduledTask";
 
-export class RukbunkerEnergyLoggerService extends Service {
+export class RukbunkerMonthlyEnergyLoggerService extends Service {
     start(): void {
         scheduleTask(() => this.logRukbunkerEnergyUsage(), 'next-month', true);
     }
