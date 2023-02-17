@@ -24,9 +24,12 @@ export function scheduleTask(runnable: () => any, dateSupplier: 'next-midnight' 
     }
 
     setTimeout(
-        () => {
+        async () => {
             try {
-                runnable();
+                const res = runnable();
+                if (res instanceof Promise) {
+                    await res;
+                }
             } catch (e) {
                 console.error('Error while running scheduled task.');
                 console.error(e);
