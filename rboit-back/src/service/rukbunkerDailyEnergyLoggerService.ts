@@ -10,9 +10,9 @@ const KWH_PRICE = 0.67;
 export class RukbunkerDailyEnergyLoggerService extends Service {
 
     async start(): Promise<void> {
-        if (await this.getLastWattHours() === undefined) {
-            const reading = await this.getCurrentTotalWattHours();
-            await this.setLastWattHours(reading);
+        if (await this.getLastReading() === undefined) {
+            const reading = await this.getSmartReading();
+            await this.setLastReading(reading);
         }
 
         scheduleTask(() => this.update(), 'next-midnight', true);
@@ -23,12 +23,18 @@ export class RukbunkerDailyEnergyLoggerService extends Service {
     }
 
     private async update() {
-        const currentReading = await this.getCurrentTotalWattHours();
-        const usageToday = currentReading - await this.getLastWattHours();
-        await this.setLastWattHours(currentReading);
+        const currentReading = await this.getSmartReading();
+        const lastReading = await this.getLastReading();
+        await this.setLastReading(currentReading);
 
-        const cost = usageToday * KWH_PRICE;
-        const message = `:zap: Rukbunker energy usage today: \`${usageToday} kWh\` / \`€${cost}\``;
+        const delivery = currentReading.energy.delivery - lastReading.energy.delivery;
+        const redelivery = currentReading.energy.redelivery - lastReading.energy.redelivery;
+        const total = delivery - redelivery;
+
+        const message = `:zap: Rukbunker energy usage today
+> Delivery: \`${delivery.toFixed(2)} kWh\` / \`€${(delivery * KWH_PRICE).toFixed(2)}\`
+> Redelivery: \`${redelivery.toFixed(2)} kWh\` / \`€${(redelivery * KWH_PRICE).toFixed(2)}\`
+> Total: \`${total.toFixed(2)} kWh\` / \`€${(total * KWH_PRICE).toFixed(2)}\``;
 
         await discordClient.send(message);
     }
@@ -39,16 +45,11 @@ export class RukbunkerDailyEnergyLoggerService extends Service {
         return reading.source as DTS353FReading;
     }
 
-    public async getCurrentTotalWattHours(): Promise<number> {
-        const reading = await this.getSmartReading();
-        return reading.energy.total;
+    private async getLastReading(): Promise<DTS353FReading | undefined> {
+        return await redisGet<DTS353FReading>('rb-total-last-reading');
     }
 
-    private async getLastWattHours(): Promise<number | undefined> {
-        return await redisGet<number>('rb-total-last-watt-hours');
-    }
-
-    private async setLastWattHours(value: number): Promise<void> {
-        await redisSet<number>('rb-total-last-watt-hours', value);
+    private async setLastReading(value: DTS353FReading): Promise<void> {
+        await redisSet<DTS353FReading>('rb-total-last-reading', value);
     }
 }
