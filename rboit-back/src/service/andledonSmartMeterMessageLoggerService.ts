@@ -9,7 +9,7 @@ export class AndledonSmartMeterMessageLoggerService extends Service {
     private lastMessage: string = '';
 
     start() {
-        scheduleTask(() => this.checkForNewMessage(), withDelay(10, 'seconds'), true);
+        scheduleTask(async () => await this.checkForNewMessage(), withDelay(10, 'seconds'), true);
     }
 
     getDeviceDependencies(): string[] {

@@ -6,7 +6,7 @@ import {scheduleTask} from "./scheduledTask";
 
 export class RukbunkerMonthlyEnergyLoggerService extends Service {
     start(): void {
-        scheduleTask(() => this.logRukbunkerEnergyUsage(), 'next-month', true);
+        scheduleTask(async () => await this.logRukbunkerEnergyUsage(), 'next-month', true);
     }
 
     getDeviceDependencies(): string[] {

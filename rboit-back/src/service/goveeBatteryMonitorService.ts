@@ -12,7 +12,7 @@ export class GoveeBatteryMonitorService extends Service {
     ];
 
     start(): void {
-        scheduleTask(() => this.checkGoveeBattery(), 'next-midnight', true);
+        scheduleTask(async () => await this.checkGoveeBattery(), 'next-midnight', true);
     }
 
     getDeviceDependencies(): string[] {

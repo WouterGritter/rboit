@@ -18,7 +18,7 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
             await this.setLastWattHours(state.wattHoursTotal);
         }
 
-        scheduleTask(() => this.update(), withDelay(5, 'minutes'), true);
+        scheduleTask(async () => await this.update(), withDelay(5, 'minutes'), true);
     }
 
     getDeviceDependencies(): string[] {

@@ -15,7 +15,7 @@ export class RukbunkerDailyEnergyLoggerService extends Service {
             await this.setLastReading(reading);
         }
 
-        scheduleTask(() => this.update(), 'next-midnight', true);
+        scheduleTask(async () => await this.update(), 'next-midnight', true);
     }
 
     getDeviceDependencies(): string[] {
