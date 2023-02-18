@@ -17,23 +17,22 @@ export class DeviceController {
         if (!device) {
             res.status(400);
             res.send({
-                error: `invalid device name`
+                error: `Invalid device name`
             });
             return;
         }
 
-        let reading = await device.getReading()
-            .catch(console.error);
-
-        if (!reading) {
+        try {
+            const reading = await device.getReading();
+            res.send(reading);
+        } catch (error) {
+            console.error(`Error while getting reading for device ${device.name}: ${error}`);
             res.status(500);
             res.send({
-                error: 'undefined reading'
+                error: error.toString(),
             });
             return;
         }
-
-        res.send(reading);
     }
 
     async history(req: express.Request, res: express.Response) {

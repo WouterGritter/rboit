@@ -4,21 +4,31 @@ import {BroedmachineTemperatureDevice} from "../device/device/temperature/broedm
 
 export class BroedmachineController {
     async getSensor(req: express.Request, res: express.Response) {
-        const reading = await this.device.getBroedmachineReading();
+        try {
+            const reading = await this.device.getBroedmachineReading();
 
-        res.send({
-            temperature: reading.temperature,
-            humidity: reading.humidity,
-        });
+            res.send({
+                temperature: reading.temperature,
+                humidity: reading.humidity,
+            });
+        } catch (e) {
+            res.status(500);
+            res.send({error: e.toString()});
+        }
     }
 
     async getFan(req: express.Request, res: express.Response) {
-        const reading = await this.device.getBroedmachineReading();
+        try {
+            const reading = await this.device.getBroedmachineReading();
 
-        res.send({
-            fan_rpm: reading.fan_rpm,
-            fan_speed: reading.fan_speed,
-        });
+            res.send({
+                fan_rpm: reading.fan_rpm,
+                fan_speed: reading.fan_speed,
+            });
+        } catch (e) {
+            res.status(500);
+            res.send({error: e.toString()});
+        }
     }
 
     async postFan(req: express.Request, res: express.Response) {
@@ -28,6 +38,7 @@ export class BroedmachineController {
             await this.device.setFanSpeed(request.fan_speed);
             res.send({set_speed: request.fan_speed});
         } catch (e) {
+            res.status(500);
             res.send({error: e.toString()});
         }
     }

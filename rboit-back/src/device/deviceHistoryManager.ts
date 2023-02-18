@@ -35,10 +35,10 @@ export class DeviceHistoryManager {
         }
 
         let reading;
-        try{
+        try {
             reading = await device.getReading();
-        }catch(e) {
-            console.error(e);
+        } catch (error) {
+            console.error(`Error while getting reading for device ${device.name}: ${error}`);
             return;
         }
 
