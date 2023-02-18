@@ -1,0 +1,23 @@
+.info {
+  margin: 0.3em;
+  font-size: 1.3em;
+}
+
+.small {
+  font-size: 0.7em;
+}
+
+p {
+  margin: 0 0 0.15em 0;
+}
+
+.graph-container {
+  margin-top: 1em;
+  width: 50%;
+}
+
+@media (max-width: 1500px) {
+  .graph-container {
+    width: 100%;
+  }
+}

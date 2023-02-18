@@ -11,7 +11,6 @@ export class RbDoorbellController {
         }
 
         const chime = req.body as ChimeRequest;
-        console.log(chime);
 
         res.send({error: false});
 

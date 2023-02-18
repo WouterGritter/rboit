@@ -31,6 +31,9 @@ import { RbPowerPageComponent } from './pages/rb-power-page/rb-power-page.compon
 import { ChimeButtonComponent } from './rb-doorbell/chime-button/chime-button.component';
 import { RbSolarOverviewComponent } from './rb-solar-overview/rb-solar-overview.component';
 import { RbSolarPageComponent } from './pages/rb-solar-page/rb-solar-page.component';
+import { BroedmachineOverviewComponent } from './broedmachine/broedmachine-overview/broedmachine-overview.component';
+import { BroedmachinePageComponent } from './pages/broedmachine-page/broedmachine-page.component';
+import {MatSliderModule} from "@angular/material/slider";
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
 @NgModule({
@@ -51,23 +54,26 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
     ChimeButtonComponent,
     RbSolarOverviewComponent,
     RbSolarPageComponent,
+    BroedmachineOverviewComponent,
+    BroedmachinePageComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatCardModule,
-    MatTabsModule,
-    NgApexchartsModule,
-    HttpClientModule,
-    MatGridListModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatSidenavModule,
-    MatListModule,
-    MatButtonModule,
-    MatSlideToggleModule
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatCardModule,
+        MatTabsModule,
+        NgApexchartsModule,
+        HttpClientModule,
+        MatGridListModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatSidenavModule,
+        MatListModule,
+        MatButtonModule,
+        MatSlideToggleModule,
+        MatSliderModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

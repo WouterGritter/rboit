@@ -16,13 +16,26 @@ export class BroedmachineTemperatureDevice extends CachedDevice<TemperatureReadi
         this.address = address;
     }
 
-    getActualReading(): Promise<TemperatureReading> {
+    public async getBroedmachineReading(): Promise<BroedmachineReading> {
         return fetch(`http://${this.address}/get`)
-            .then(response => response.json() as Promise<BroedmachineTemperatureReading>)
-            .then(reading => this.toTemperatureReading(reading));
+            .then(response => response.json() as Promise<BroedmachineReading>);
     }
 
-    private toTemperatureReading(reading: BroedmachineTemperatureReading): TemperatureReading {
+    public async setFanSpeed(speed: number): Promise<void> {
+        return fetch(`http://${this.address}/setfan?speed=${speed}`)
+            .then(response => response.text())
+            .then(response => {
+                if (!response.startsWith('Speed set to')) {
+                    throw new Error(response);
+                }
+            });
+    }
+
+    public async getActualReading(): Promise<TemperatureReading> {
+        return this.getBroedmachineReading().then(reading => this.toTemperatureReading(reading));
+    }
+
+    private toTemperatureReading(reading: BroedmachineReading): TemperatureReading {
         return {
             date: new Date(),
             temperature: reading.temperature,
@@ -32,7 +45,7 @@ export class BroedmachineTemperatureDevice extends CachedDevice<TemperatureReadi
     }
 }
 
-export type BroedmachineTemperatureReading = {
+export type BroedmachineReading = {
     temperature: number;
     humidity: number;
     fan_rpm: number;
