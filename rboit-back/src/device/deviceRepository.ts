@@ -28,7 +28,7 @@ class DeviceRepository {
         // this.devices.push(new GoodwePowerDevice('solar', 'fbe5497e-f3e3-4267-978e-0e486028949e'));
         this.devices.push(new RukbunkerSolarPowerDevice());
         this.devices.push(new TapoPowerDevice('rb-tv', '10.43.60.72'));
-        this.devices.push(new DaikinPowerDevice('rb-ac', '10.43.60.66'));
+        this.devices.push(new DaikinPowerDevice('rb-ac', '10.43.60.6'));
         this.devices.push(new TapoPowerDevice('rb-kachel-slaapkamer', '10.43.60.70'));
         this.devices.push(new TapoPowerDevice('rb-boiler', '10.43.60.69'));
         this.devices.push(new TapoPowerDevice('rb-slaapkamer-bureau', '10.43.60.78'));
@@ -39,7 +39,7 @@ class DeviceRepository {
         this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.52'));
         this.devices.push(new GoveeTemperatureDevice('rb-temp-woonkamer', 'A4:C1:38:10:4F:D9'));
         this.devices.push(new GoveeTemperatureDevice('rb-temp-slaapkamer', 'A4:C1:38:D5:D9:2C'));
-        this.devices.push(new DaikinOutdoorTemperatureDevice('rb-temp-outdoor', '10.43.60.66'));
+        this.devices.push(new DaikinOutdoorTemperatureDevice('rb-temp-outdoor', '10.43.60.6'));
         this.devices.push(new BroedmachineTemperatureDevice('broedmachine-temp', '10.43.60.243'));
 
         let historyManager = new DeviceHistoryManager(this.devices, this.historyConfig);
