@@ -11,6 +11,7 @@ services:
 
   python-daemon:
     build: './python-daemon'
+    env_file: '.env'
     ports:
     - '8082:80'  # Only needed for development
     devices:
@@ -31,6 +32,7 @@ services:
 
   rboit-back:
     build: './rboit-back'
+    env_file: '.env'
     environment:
       TZ: 'Europe/Amsterdam'
       PYTHON_DAEMON: 'http://python-daemon/'
