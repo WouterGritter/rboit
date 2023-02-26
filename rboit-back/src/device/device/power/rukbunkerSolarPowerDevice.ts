@@ -8,7 +8,7 @@ export class RukbunkerSolarPowerDevice extends CachedDevice<PowerReading> {
     readonly type: DeviceType = 'power';
 
     async getActualReading(): Promise<PowerReading> {
-        return fetch('http://10.43.60.63/')
+        return fetch('http://10.43.60.8/')
             .then(response => response.json() as Promise<RukbunkerSolarReading>)
             .then(reading => this.toPowerReading(reading));
     }
