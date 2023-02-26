@@ -18,7 +18,7 @@ export class GoveeTemperatureDevice extends CachedDevice<TemperatureReading> {
     }
 
     getActualReading(): Promise<TemperatureReading> {
-        return fetch(`http://10.43.60.245:8069/${this.address}`)
+        return fetch(`${process.env.GOVEE_DAEMON}/${this.address}`)
             .then(response => response.json() as Promise<GoveeTemperatureReading>)
             .then(reading => this.toTemperatureReading(reading));
     }
