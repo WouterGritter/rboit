@@ -30,7 +30,7 @@ services:
     environment:
       TZ: 'Europe/Amsterdam'
       PYTHON_DAEMON: 'http://python-daemon/'
-      GOVEE_DAEMON: 'http://govee-bluetooth-daemon:8069/'
+      GOVEE_DAEMON: 'http://host.docker.internal:8069/'
       REDIS_URL: 'redis://redis/'
       DEVICE_CACHE_MAX_AGE: '900'
       DEVICE_HISTORY_LENGTH: '86400000'  # 24 hours
