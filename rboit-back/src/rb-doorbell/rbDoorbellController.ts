@@ -26,7 +26,7 @@ export class RbDoorbellController {
         this.isChimeInProgress = true;
 
         for (let i = 0; i < repeatAmount; i++) {
-            fetch(`http://10.43.60.75/?duration=${duration}&t=${new Date().getTime()}`)
+            fetch(`http://10.43.60.5/?duration=${duration}&t=${new Date().getTime()}`)
                 .then(res => res.text())
                 .then(res => {
                     if (res !== 'OK') throw Error(res)
