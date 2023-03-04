@@ -19,9 +19,9 @@ export class RukbunkerMonthlyEnergyLoggerService extends Service {
         const smartMeterReading = reading.source as DTS353FReading;
 
         const message = `:robot: It's the first of the month! Here's an overview of the energy usage in the Rukbunker.
-> Delivery: ${smartMeterReading.energy.delivery} kWh
-> Redelivery: ${smartMeterReading.energy.redelivery} kWh
-> Total: ${smartMeterReading.energy.total} kWh`;
+> Delivery: ${smartMeterReading.energy.delivery.toFixed(2)} kWh
+> Redelivery: ${smartMeterReading.energy.redelivery.toFixed(2)} kWh
+> Total: ${smartMeterReading.energy.total.toFixed(2)} kWh`;
 
         await discordClient.send(message);
     }
