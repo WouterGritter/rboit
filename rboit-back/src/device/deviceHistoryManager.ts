@@ -47,8 +47,8 @@ export class DeviceHistoryManager {
             return;
         }
 
-        if (reading.date === undefined) {
-            console.log(`Warning! Reading of device ${device.name} does not have a date attribute. Please add this to keep track of the reading history.`);
+        if (!this.isValidReading(reading)) {
+            console.log(`Warning! Reading of device ${device.name} is not valid.`, reading);
             return;
         }
 
@@ -118,9 +118,14 @@ export class DeviceHistoryManager {
             }
 
             device.history.splice(0, device.history.length);
-            for (let i = 0; i < entry.history.length; i++) {
-                entry.history[i].date = new Date(entry.history[i].date); // Dates are stored as string...
-                device.history[i] = entry.history[i];
+            for (let entryHistory of entry.history) {
+                entryHistory.date = new Date(entryHistory.date); // Dates are stored as string...
+                if (!this.isValidReading(entryHistory)) {
+                    console.log('Skipping invalid reading while loading histories.', entryHistory);
+                    continue;
+                }
+
+                device.history.push(entryHistory);
             }
 
             if (device.history.length > 0) {
@@ -135,6 +140,21 @@ export class DeviceHistoryManager {
 
             this.purgeOutdatedHistory(device);
         }
+    }
+
+    private isValidReading(reading: any): boolean {
+        if (reading === undefined) {
+            return false;
+        }
+
+        if (reading.date === undefined) {
+            return false;
+        }
+
+        const diff = new Date().getTime() - new Date(reading.date).getTime();
+
+        // Allow readings that are up to 10 minutes in the future
+        return diff > -(1000 * 60 * 10);
     }
 }
 
