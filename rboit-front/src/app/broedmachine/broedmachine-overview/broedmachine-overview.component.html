@@ -1,7 +1,17 @@
 <div class="info">
-  <p>Temperature: {{ temperature.value.toFixed(1) }}°C</p>
-  <p>Humidity: {{ humidity.value.toFixed(1) }}%</p>
-  <p>Fan speed: {{ fanRpm.value.toFixed(0) }}rpm <span class="small">{{ (fanSpeed * 100).toFixed(0) }}%</span></p>
+  <app-device-history-controls></app-device-history-controls>
+  <p>
+    Temperature: {{ temperature.value.toFixed(1) }}°C
+    <span class="small">(avg. {{ graph.getAverageHistoryValue('temperature').toFixed(1) }}°C)</span>
+  </p>
+  <p>
+    Humidity: {{ humidity.value.toFixed(1) }}%
+    <span class="small">(avg. {{ graph.getAverageHistoryValue('humidity').toFixed(1) }}%)</span>
+  </p>
+  <p>
+    Fan speed: {{ fanRpm.value.toFixed(0) }}rpm
+    <span class="small">(set {{ (fanSpeed * 100).toFixed(0) }}%)</span>
+  </p>
 
   <label for="fan-speed" class="small">Fan</label>
   <mat-slider id="fan-speed" min="0" max="1" step="0.01" value="{{ fanSpeed }}" (valueChange)="setFanSpeed($event)"></mat-slider>
@@ -9,8 +19,7 @@
 
 <div class="graph-container">
   <app-temperature-device
+    #graph
     [name]="'broedmachine-temp'"
-    [overrideHistoryLength]="24 * 60 * 60 * 1000"
-    [overrideAverageValues]="false"
   ></app-temperature-device>
 </div>
