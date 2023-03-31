@@ -8,6 +8,7 @@ services:
     volumes:
       - 'redis-data:/data'
     command: 'redis-server --save 5 1 --loglevel warning'
+    restart: unless-stopped
 
   python-daemon:
     build: './python-daemon'
@@ -18,6 +19,7 @@ services:
       - '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MONL8-if00-port0'
     environment:
       DTS353F_USB_DEVICE: '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MONL8-if00-port0'
+    restart: unless-stopped
 
   govee-bluetooth-daemon:
     build: './govee-bluetooth-daemon'
@@ -25,6 +27,7 @@ services:
       PORT: '8069'
     network_mode: host  # Needed for bluetooth
     privileged: true  # Needed for bluetooth
+    restart: unless-stopped
 
   rboit-back:
     build: './rboit-back'
@@ -41,11 +44,13 @@ services:
       STORE_HISTORY: 'true'
     ports:
       - '8081:80'  # Only needed for development
+    restart: unless-stopped
 
   rboit-front:
     build: './rboit-front'
     ports:
       - '8080:80'
+    restart: unless-stopped
 
 volumes:
   redis-data:
