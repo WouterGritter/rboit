@@ -5,7 +5,7 @@ import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask, withDelay} from "./scheduledTask";
 
-const KWH_PRICE = 0.67;
+const KWH_PRICE = 0.48;
 
 export class RukbunkerSolarEnergyLoggerService extends Service {
     private wasGenerating: boolean;

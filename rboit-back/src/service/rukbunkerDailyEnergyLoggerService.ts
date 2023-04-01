@@ -5,7 +5,7 @@ import {scheduleTask} from "./scheduledTask";
 import {DTS353FReading, RukbunkerSmartMeterPowerDevice} from "../device/device/power/rukbunkerSmartMeterPowerDevice";
 import {discordClient} from "../discordClient";
 
-const KWH_PRICE = 0.67;
+const KWH_PRICE = 0.48;
 
 export class RukbunkerDailyEnergyLoggerService extends Service {
 
