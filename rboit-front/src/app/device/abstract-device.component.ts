@@ -5,6 +5,7 @@ import {
 } from "./service/device-history-config.service";
 import {Observable} from "rxjs";
 import {IsHandsetService} from "../is-handset.service";
+import {KeyOfType} from "../helpers/keyOfType";
 
 @Component({
   template: ''
@@ -99,10 +100,9 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     }
 
     const lastReading = this.historyReadings[this.historyReadings.length - 1];
-    const historyMaxAge = this.overrideHistoryLength ?? this.getHistoryConfigService().getLocalHistoryLength().getValue();
     const parsed = this.parseReadings(
       this.name,
-      this.historyReadings.filter(reading => this.ageOf(reading) < historyMaxAge),
+      this.getSplicedHistoryReadings(),
       lastReading
     );
 
@@ -156,6 +156,33 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
 
   private ageOf(reading: Reading): number {
     return new Date().getTime() - reading.date.getTime();
+  }
+
+  private getSplicedHistoryReadings(): Reading[] {
+    const historyMaxAge = this.overrideHistoryLength ?? this.getHistoryConfigService().getLocalHistoryLength().getValue();
+    return this.historyReadings.filter(reading => this.ageOf(reading) < historyMaxAge);
+  }
+
+  public getAverageHistoryValue(propertyName: KeyOfType<Reading, number | undefined>): number {
+    const history = this.getSplicedHistoryReadings();
+
+    let sum = 0;
+    let count = 0;
+    for (const reading of history) {
+      const value = reading[propertyName];
+      if (value === undefined) {
+        continue;
+      }
+
+      sum += value;
+      count++;
+    }
+
+    if (count === 0) {
+      return 0;
+    }
+
+    return sum / count;
   }
 }
 
