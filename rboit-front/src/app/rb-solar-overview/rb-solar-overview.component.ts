@@ -11,7 +11,7 @@ export class RbSolarOverviewComponent implements OnInit, OnDestroy {
   private updateIntervalId: any | undefined;
 
   config = {
-    panelAmount: 6,
+    panelAmount: 8,
     panelWattage: 150,
   };
 
