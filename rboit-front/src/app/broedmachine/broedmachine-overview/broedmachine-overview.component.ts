@@ -14,6 +14,8 @@ export class BroedmachineOverviewComponent implements OnInit, OnDestroy {
   fanRpm = new LerpedNumber(0.08, 1);
   fanSpeed: number = 0;
 
+  fanSpeedUnlocked: boolean = false;
+
   private updateIntervalId: any;
 
   constructor(private broedmachineService: BroedmachineService) {
@@ -44,6 +46,17 @@ export class BroedmachineOverviewComponent implements OnInit, OnDestroy {
           window.alert(`Erorr while updating fan speed: ${data.error}`);
         }
       });
+  }
+
+  clickFanSpeed(): void {
+    if (this.fanSpeedUnlocked) {
+      return;
+    }
+
+    const confirm = window.confirm('Do you want to enable the fan slider?');
+    if (confirm) {
+      this.fanSpeedUnlocked = true;
+    }
   }
 
   private update(): void {
