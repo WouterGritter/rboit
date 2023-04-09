@@ -49,11 +49,11 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
                     messages: [
                         {
                             role: 'system',
-                            content: 'You are a helpful, drunk assistant. Follow the user\'s request carefully. Slur your words because you are drunk.'
+                            content: 'You are a helpful, drunk assistant. Follow the user\'s request carefully. You are drunk so you will slur your words. Make sure to slur your words because you are drunk. Don\'t forget to slur your words. Keep slurring your words.'
                         },
                         {
                             role: 'user',
-                            content: `Generate a message to tell the user how much energy their solar system has generated. It generated ${state.wattHoursToday} Wh (which is ${savings.toFixed(2)} euro). Only respond with the message and nothing else (also no quotes at the beginning and end). You are drunk so you will slur your words.`
+                            content: `Generate a message to tell the user how much energy their solar system has generated. It generated ${state.wattHoursToday} Wh (which is ${savings.toFixed(2)} euro). Only respond with the message and nothing else (also no quotes at the beginning and end). You are drunk so you will slur your words. Make sure to slur your words because you are drunk. Don't forget to slur your words. Keep slurring your words.`
                         }
                     ],
                 });
