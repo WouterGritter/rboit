@@ -8,6 +8,8 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
     readonly name: string = 'rb-smart-meter';
     readonly type: DeviceType = 'power';
 
+    private wasRedeliveringL3: boolean = false;
+
     async getActualReading(): Promise<PowerReading> {
         const reading = await fetch(`${process.env.PYTHON_DAEMON}/dts353f`)
             .then(response => response.json() as Promise<DTS353FReading>);
@@ -34,15 +36,16 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
         const L2 = this.toPowerReadingValues(reading, 'l2');
         const L3 = this.toPowerReadingValues(reading, 'l3');
 
-        if (Math.abs(solarReading.power) > 30) {
-            // We're always consuming a little bit of power on L3.
+        const redeliveringNow = Math.abs(solarReading.power) > 30 &&
+            (andledonReading.L3.power < L3.power || L3.voltage - andledonReading.L3.voltage > 1);
 
-            if (andledonReading.L3.power < L3.power || L3.voltage - andledonReading.L3.voltage > 1) {
-                // Rukbunker can redeliver on L3. So we are definitely redelivering.
-                L3.power *= -1;
-                L3.amperage *= -1;
-            }
+        if (redeliveringNow || this.wasRedeliveringL3) {
+            // Rukbunker can redeliver on L3. So we are definitely redelivering.
+            L3.power *= -1;
+            L3.amperage *= -1;
         }
+
+        this.wasRedeliveringL3 = redeliveringNow;
 
         const total = {
             power: L1.power + L2.power + L3.power,
