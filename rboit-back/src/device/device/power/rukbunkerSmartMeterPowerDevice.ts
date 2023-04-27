@@ -1,7 +1,6 @@
 import {CachedDevice} from "../cachedDevice";
 import {PowerReading, PowerReadingValues} from "./powerReading";
 import {DeviceType} from "../device";
-import {AndledonSmartMeterPowerDevice, AndledonSmartMeterReading} from "./andledonSmartMeterPowerDevice";
 import {DEVICE_REPOSITORY} from "../../deviceRepository";
 
 export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
@@ -16,7 +15,10 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
         const andledonReading = await DEVICE_REPOSITORY.findDevice<PowerReading>('andledon-smart-meter', 'power')
             .getReading();
 
-        return this.toPowerReading(reading, andledonReading);
+        const solarReading = await DEVICE_REPOSITORY.findDevice<PowerReading>('rb-solar', 'power')
+            .getReading();
+
+        return this.toPowerReading(reading, andledonReading, solarReading);
     }
 
     private toPowerReadingValues(reading: DTS353FReading, phase: 'l1' | 'l2' | 'l3'): PowerReadingValues {
@@ -27,15 +29,19 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
         return {power, voltage, amperage};
     }
 
-    private toPowerReading(reading: DTS353FReading, andledonReading: PowerReading): PowerReading {
+    private toPowerReading(reading: DTS353FReading, andledonReading: PowerReading, solarReading: PowerReading): PowerReading {
         const L1 = this.toPowerReadingValues(reading, 'l1');
         const L2 = this.toPowerReadingValues(reading, 'l2');
         const L3 = this.toPowerReadingValues(reading, 'l3');
 
-        if (andledonReading.L3.power < L3.power) {
-            // Rukbunker can redeliver on L3. So we are definitely redelivering.
-            L3.power *= -1;
-            L3.amperage *= -1;
+        if (solarReading.power > 30) {
+            // We're always consuming a little bit of power on L3.
+
+            if (andledonReading.L3.power < L3.power || L3.voltage - andledonReading.L3.voltage > 1) {
+                // Rukbunker can redeliver on L3. So we are definitely redelivering.
+                L3.power *= -1;
+                L3.amperage *= -1;
+            }
         }
 
         const total = {
