@@ -34,7 +34,7 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
         const L2 = this.toPowerReadingValues(reading, 'l2');
         const L3 = this.toPowerReadingValues(reading, 'l3');
 
-        if (solarReading.power > 30) {
+        if (Math.abs(solarReading.power) > 30) {
             // We're always consuming a little bit of power on L3.
 
             if (andledonReading.L3.power < L3.power || L3.voltage - andledonReading.L3.voltage > 1) {
