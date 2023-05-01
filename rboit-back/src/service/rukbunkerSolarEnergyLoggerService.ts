@@ -5,8 +5,7 @@ import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask, withDelay} from "./scheduledTask";
 import {Configuration, OpenAIApi} from "openai";
-
-const KWH_PRICE = 0.48;
+import {KWH_PRICE} from "../constants";
 
 export class RukbunkerSolarEnergyLoggerService extends Service {
     private wasGenerating: boolean;
