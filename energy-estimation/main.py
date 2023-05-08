@@ -2,11 +2,13 @@ from datetime import datetime
 
 import requests
 
+HOST = 'https://rboit.woutergritter.me'
+
 
 def load_all_devices():
     print('Loading device list...', end='')
     result = {}
-    names = requests.get('http://10.43.60.245:8080/api/device/power/names').json()
+    names = requests.get(f'{HOST}/api/device/power/names').json()
     counter = 0
     for name in names:
         counter += 1
@@ -19,7 +21,7 @@ def load_all_devices():
 
 
 def __get_energy(device_name):
-    history = requests.get(f'http://10.43.60.245:8080/api/device/power/history/{device_name}').json()
+    history = requests.get(f'{HOST}/api/device/power/history/{device_name}').json()
     last_entry = None
     total_watt_hours = 0
     for entry in history:
@@ -51,7 +53,7 @@ def print_energy(device_name, energy):
     avg_watts = energy / 24 * 1000
     cost = energy * 0.67
 
-    name_padding = " " * (22 - len(device_name))
+    name_padding = " " * (30 - len(device_name))
     print(f'{device_name}:{name_padding}{energy:6.3f} kWh / {avg_watts:5.1f} W / {cost:5.2f} EUR')
 
 
@@ -65,7 +67,10 @@ def main():
     print_energy('TOTAL USED', total_energy_usage)
     print_energy('TOTAL USED (w/o heat)',
                  total_energy_usage - device_energy['rb-ac'] - device_energy['rb-kachel-slaapkamer'])
+    print_energy('TOTAL USED (w/o heat & boiler)',
+                 total_energy_usage - device_energy['rb-ac'] - device_energy['rb-kachel-slaapkamer'] - device_energy['rb-boiler'])
     print_energy('TOTAL USED (heat)', device_energy['rb-ac'] + device_energy['rb-kachel-slaapkamer'])
+    print_energy('TOTAL USED (heat & boiler)', device_energy['rb-ac'] + device_energy['rb-kachel-slaapkamer'] + device_energy['rb-boiler'])
 
     print()
 
@@ -74,7 +79,7 @@ def main():
         'rb-boiler',
         'hue-devices',
         'rb-ac',
-        # 'rb-tv',
+        'rb-tv',
         'rb-kachel-slaapkamer',
         'rb-slaapkamer-bureau',
     ]
@@ -86,7 +91,7 @@ def main():
         print_energy(device_name, energy)
 
     # Known stand-by usage
-    standby_energy = 39 / 1000 * 24
+    standby_energy = 52 / 1000 * 24
     cumulative_device_energy += standby_energy
     print_energy('est. stand-by', standby_energy)
 
