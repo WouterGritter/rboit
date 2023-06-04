@@ -1,1 +1,1 @@
-export const KWH_PRICE = 0.46;
+export const KWH_PRICE = 0.40;
