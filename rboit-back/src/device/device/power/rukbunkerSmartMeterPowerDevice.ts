@@ -2,6 +2,7 @@ import {CachedDevice} from "../cachedDevice";
 import {PowerReading, PowerReadingValues} from "./powerReading";
 import {DeviceType} from "../device";
 import {DEVICE_REPOSITORY} from "../../deviceRepository";
+import {RB_METER_L3_PHANTOM_POWER, RB_METER_MIN_POWER_DROP} from "../../../constants";
 
 export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
     readonly history: PowerReading[] = [];
@@ -36,8 +37,8 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
         const L2 = this.toPowerReadingValues(reading, 'l2');
         const L3 = this.toPowerReadingValues(reading, 'l3');
 
-        const redeliveringNow = Math.abs(solarReading.power) > 30 &&
-            (andledonReading.L3.power < L3.power || L3.voltage - andledonReading.L3.voltage > 1);
+        const redeliveringNow = Math.abs(solarReading.power) > RB_METER_L3_PHANTOM_POWER &&
+            (andledonReading.L3.power < L3.power || L3.voltage - andledonReading.L3.voltage > RB_METER_MIN_POWER_DROP);
 
         if (redeliveringNow || this.wasRedeliveringL3) {
             // Rukbunker can redeliver on L3. So we are definitely redelivering.
