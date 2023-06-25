@@ -13,8 +13,6 @@ services:
   python-daemon:
     build: './python-daemon'
     env_file: '.env'
-    ports:
-      - '8082:80'  # Only needed for development
     restart: unless-stopped
 
   rboit-back:
@@ -31,8 +29,6 @@ services:
       DEVICE_HISTORY_INTERVAL: '10000'
       CLIENT_HISTORY_INTERVAL: '1000'
       STORE_HISTORY: 'true'
-    ports:
-      - '8081:80'  # Only needed for development
     restart: unless-stopped
 
   rboit-front:
