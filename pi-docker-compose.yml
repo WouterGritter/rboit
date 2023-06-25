@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  govee-bluetooth-daemon:
+    build: './govee-bluetooth-daemon'
+    environment:
+      PORT: '8069'
+    network_mode: host  # Needed for bluetooth
+    privileged: true  # Needed for bluetooth
+    restart: unless-stopped
+
+  dts353f-daemon:
+    build: './dts353f-daemon'
+    ports:
+      - '8096:80'
+    devices:
+      - '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MONL8-if00-port0'
+    environment:
+      DTS353F_USB_DEVICE: '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MONL8-if00-port0'
+    restart: unless-stopped
+ 

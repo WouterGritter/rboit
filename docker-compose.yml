@@ -15,18 +15,6 @@ services:
     env_file: '.env'
     ports:
       - '8082:80'  # Only needed for development
-    devices:
-      - '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MONL8-if00-port0'
-    environment:
-      DTS353F_USB_DEVICE: '/dev/serial/by-id/usb-FTDI_FT232R_USB_UART_A10MONL8-if00-port0'
-    restart: unless-stopped
-
-  govee-bluetooth-daemon:
-    build: './govee-bluetooth-daemon'
-    environment:
-      PORT: '8069'
-    network_mode: host  # Needed for bluetooth
-    privileged: true  # Needed for bluetooth
     restart: unless-stopped
 
   rboit-back:
@@ -35,7 +23,8 @@ services:
     environment:
       TZ: 'Europe/Amsterdam'
       PYTHON_DAEMON: 'http://python-daemon/'
-      GOVEE_DAEMON: 'http://172.17.0.1:8069/'
+      GOVEE_DAEMON: 'http://10.43.60.2:8069/'
+      DTS353F_DAEMON: 'http://10.43.60.2:8096/'
       REDIS_URL: 'redis://redis/'
       DEVICE_CACHE_MAX_AGE: '900'
       DEVICE_HISTORY_LENGTH: '86400000'  # 24 hours
