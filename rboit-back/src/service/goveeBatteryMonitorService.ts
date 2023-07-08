@@ -9,6 +9,7 @@ export class GoveeBatteryMonitorService extends Service {
     private deviceNames: string[] = [
         'rb-temp-woonkamer',
         'rb-temp-slaapkamer',
+        'rb-temp-server-room',
     ];
 
     start(): void {
