@@ -32,6 +32,7 @@ class DeviceRepository {
         this.devices.push(new TapoPowerDevice('rb-kachel-slaapkamer', '10.43.60.70'));
         this.devices.push(new TapoPowerDevice('rb-boiler', '10.43.60.69'));
         this.devices.push(new TapoPowerDevice('rb-slaapkamer-bureau', '10.43.60.78'));
+        this.devices.push(new TapoPowerDevice('server-rack', '10.43.60.112'));
         this.devices.push(new RukbunkerSmartMeterPowerDevice());
         this.devices.push(new HuePowerDevice());
 
@@ -39,6 +40,7 @@ class DeviceRepository {
         this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.4'));
         this.devices.push(new GoveeTemperatureDevice('rb-temp-woonkamer', 'A4:C1:38:10:4F:D9'));
         this.devices.push(new GoveeTemperatureDevice('rb-temp-slaapkamer', 'A4:C1:38:D5:D9:2C'));
+        this.devices.push(new GoveeTemperatureDevice('rb-temp-server-room', 'A4:C1:38:45:74:7B'));
         this.devices.push(new DaikinOutdoorTemperatureDevice('rb-temp-outdoor', '10.43.60.6'));
         // this.devices.push(new BroedmachineTemperatureDevice('broedmachine-temp', '10.43.60.11'));
 

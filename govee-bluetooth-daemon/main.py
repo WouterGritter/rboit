@@ -50,7 +50,7 @@ def on_advertisement(advertisement):
     name = advertisement.name
 
     if mfg_data is not None and name is not None:
-        if name in ['GVH5075_4FD9', 'GVH5075_D92C']:
+        if name.startswith('GVH5075'):
             values = int.from_bytes(mfg_data[3:6], 'big')
             temp = float(values / 10000)
             hum = float((values % 1000) / 10)

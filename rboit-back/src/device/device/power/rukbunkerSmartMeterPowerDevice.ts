@@ -12,7 +12,7 @@ export class RukbunkerSmartMeterPowerDevice extends CachedDevice<PowerReading> {
     private wasRedeliveringL3: boolean = false;
 
     async getActualReading(): Promise<PowerReading> {
-        const reading = await fetch(`${process.env.PYTHON_DAEMON}/dts353f`)
+        const reading = await fetch(`${process.env.DTS353F_DAEMON}/`)
             .then(response => response.json() as Promise<DTS353FReading>);
 
         const andledonReading = await DEVICE_REPOSITORY.findDevice<PowerReading>('andledon-smart-meter', 'power')

@@ -6,7 +6,6 @@ from flask import Flask
 
 from goodwe import get_goodwe_device
 from tapo import get_tapo_device
-from dts353f import dts353f_read_energy, dts353f_read_power
 
 load_dotenv()
 
@@ -27,24 +26,6 @@ def get_goodwe_device_endpoint(system_id):
     device = get_goodwe_device(system_id)
     device.getCurrentReadings()
     return device.data
-
-
-@app.route('/dts353f')
-def get_dts353f_energy_and_power_endpoint():
-    return {
-        'energy': dts353f_read_energy(),
-        'power': dts353f_read_power(),
-    }
-
-
-@app.route('/dts353f/energy')
-def get_dts353f_energy_endpoint():
-    return dts353f_read_energy()
-
-
-@app.route('/dts353f/power')
-def get_dts353f_power_endpoint():
-    return dts353f_read_power()
 
 
 if __name__ == '__main__':

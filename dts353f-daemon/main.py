@@ -1,11 +1,16 @@
+import logging
 import os
 
-from dotenv import load_dotenv
-from datetime import datetime
-
 import minimalmodbus
+from dotenv import load_dotenv
+from flask import Flask
 
 load_dotenv()
+
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
+
+app = Flask(__name__)
 
 DTS353F_USB_DEVICE = os.getenv('DTS353F_USB_DEVICE')
 
@@ -64,3 +69,28 @@ def dts353f_read_power():
         'l2_voltage': l2_voltage,
         'l3_voltage': l3_voltage,
     }
+
+
+@app.route('/')
+def get_dts353f_energy_and_power_endpoint():
+    return {
+        'energy': dts353f_read_energy(),
+        'power': dts353f_read_power(),
+    }
+
+
+@app.route('/energy')
+def get_dts353f_energy_endpoint():
+    return dts353f_read_energy()
+
+
+@app.route('/power')
+def get_dts353f_power_endpoint():
+    return dts353f_read_power()
+
+
+if __name__ == '__main__':
+    port = os.getenv('PORT') or '80'
+    print(f'Starting flask server on 0.0.0.0:{port}')
+
+    app.run(host='0.0.0.0', port=port, debug=False)
