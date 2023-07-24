@@ -30,6 +30,8 @@ services:
       CLIENT_HISTORY_INTERVAL: '1000'
       STORE_HISTORY: 'true'
     restart: unless-stopped
+    ports:
+      - '8081:80'
 
   rboit-front:
     build: './rboit-front'
