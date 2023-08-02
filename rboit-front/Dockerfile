@@ -3,6 +3,7 @@ FROM node:18 AS builder
 WORKDIR /build
 
 COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
 
 COPY . .
