@@ -13,7 +13,6 @@ import {startServices} from "./service/serviceManager";
     const app = express();
     const port = process.env.PORT || '80';
 
-    app.use(express.json());
     app.use(router);
 
     app.listen(port, () => {
