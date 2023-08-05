@@ -1,13 +1,24 @@
 <div class="title">
-  {{ audioLed.displayName }} ({{ audioLed.currentMode }})
+  {{ audioLed.displayName }}
+  <mat-slide-toggle (change)="$event.checked ? turnOn() : turnOff()" [checked]="audioLed.currentMode !== 'off'"></mat-slide-toggle>
 </div>
 
-<mat-form-field>
-  <mat-label>Mode</mat-label>
-  <mat-select value="{{ audioLed.currentMode }}" (selectionChange)="onModeChange($event.value)">
-    <mat-option *ngFor="let mode of audioLed.availableModes" [value]="mode">
-      {{ mode }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<div *ngIf="hasUsefulModes()">
+  <mat-form-field>
+    <mat-label>Mode</mat-label>
+    <mat-select value="{{ audioLed.currentMode }}" (selectionChange)="onModeChange($event.value)">
+      <mat-option *ngFor="let mode of audioLed.availableModes" [value]="mode">
+        {{ mode }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 
+<div>
+  <mat-form-field>
+    <mat-label>Color</mat-label>
+    <input matInput [ngxMatColorPicker]="picker" (colorChange)="onColorChange($event.value)" [value]="convertDeviceColor()">
+    <ngx-mat-color-toggle matSuffix [for]="picker"></ngx-mat-color-toggle>
+    <ngx-mat-color-picker #picker></ngx-mat-color-picker>
+  </mat-form-field>
+</div>

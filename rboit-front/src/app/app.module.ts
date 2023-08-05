@@ -38,6 +38,12 @@ import {AudioLedPageComponent} from './pages/audio-led-page/audio-led-page.compo
 import {AudioLedDeviceComponent} from './audio-led/audio-led-device/audio-led-device.component';
 import {AudioLedDeviceGroupComponent} from './audio-led/audio-led-device-group/audio-led-device-group.component';
 import {MatSelectModule} from "@angular/material/select";
+import {
+  MAT_COLOR_FORMATS,
+  NGX_MAT_COLOR_FORMATS,
+  NgxMatColorPickerModule
+} from "@angular-material-components/color-picker";
+import {MatInputModule} from "@angular/material/input";
 
 const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
 
@@ -65,25 +71,29 @@ const CanvasJSChart = CanvasJSAngularChart.CanvasJSChart;
         AudioLedDeviceComponent,
         AudioLedDeviceGroupComponent,
     ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatCardModule,
-        MatTabsModule,
-        NgApexchartsModule,
-        HttpClientModule,
-        MatGridListModule,
-        MatToolbarModule,
-        MatIconModule,
-        MatSidenavModule,
-        MatListModule,
-        MatButtonModule,
-        MatSlideToggleModule,
-        MatSliderModule,
-        MatSelectModule
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    BrowserAnimationsModule,
+    MatCardModule,
+    MatTabsModule,
+    NgApexchartsModule,
+    HttpClientModule,
+    MatGridListModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatListModule,
+    MatButtonModule,
+    MatSlideToggleModule,
+    MatSliderModule,
+    MatSelectModule,
+    NgxMatColorPickerModule,
+    MatInputModule
+  ],
+    providers: [
+      { provide: MAT_COLOR_FORMATS, useValue: NGX_MAT_COLOR_FORMATS }
     ],
-    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {
