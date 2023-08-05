@@ -1,0 +1,13 @@
+<div class="title">
+  {{ audioLed.displayName }} ({{ audioLed.currentMode }})
+</div>
+
+<mat-form-field>
+  <mat-label>Mode</mat-label>
+  <mat-select value="{{ audioLed.currentMode }}" (selectionChange)="onModeChange($event.value)">
+    <mat-option *ngFor="let mode of audioLed.availableModes" [value]="mode">
+      {{ mode }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+

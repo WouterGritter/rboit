@@ -18,6 +18,7 @@ export class NavigationComponent implements OnInit {
     { title: 'RB Solar', icon: 'sunny', routerLink: 'rb-solar' },
     { title: 'Temperature', icon: 'thermostat', routerLink: 'temperature' },
     { title: 'Broedmachine', icon: 'egg', routerLink: 'broedmachine' },
+    { title: 'Audio led', icon: 'auto_awesome', routerLink: 'audio-led' },
   ];
 
   constructor(public isHandsetService: IsHandsetService, private rbSolarService: RbSolarService) {
