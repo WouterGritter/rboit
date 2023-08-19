@@ -1,7 +1,9 @@
 {
   "/api": {
-    "target": "http://10.43.60.108:8081/",
-    "secure": false,
+    "target": "https://rboit.woutergritter.me/api/",
+    "headers": {
+      "host": "rboit.woutergritter.me"
+    },
     "pathRewrite": {
       "^/api": ""
     }
