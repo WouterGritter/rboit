@@ -47,10 +47,14 @@ export class DeviceController {
 
         let history = device.history;
 
-        let start = new Date(req.params.startDate);
-        let end = new Date(req.params.endDate);
-        if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
-            history = history.filter(x => x.date > start && x.date < end);
+        const start = new Date(req.params.startDate);
+        if (!isNaN(start.getTime())) {
+            history = history.filter(x => x.date > start);
+        }
+
+        const end = new Date(req.params.endDate);
+        if (!isNaN(end.getTime())) {
+            history = history.filter(x => x.date < end);
         }
 
         res.send(history);
