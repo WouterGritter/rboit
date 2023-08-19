@@ -1,41 +1,24 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {map} from "rxjs";
 import {roundToDigits} from "../../helpers/mathHelpers";
+import {AbstractDeviceService, DeviceClass} from "./abstract-device.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class PowerDeviceService {
+export class PowerDeviceService extends AbstractDeviceService<PowerReading> {
 
-  constructor(private http: HttpClient) { }
-
-  getNames() {
-    return this.http.get<string[]>('/api/device/power/names');
+  override getDeviceClass(): DeviceClass {
+    return 'power';
   }
 
-  getReading(name: string) {
-    return this.http.get<PowerReading>(`/api/device/power/reading/${name}`)
-      .pipe(
-        map(reading => this.normalizeReading(name, reading))
-      );
-  }
+  override normalizeReading(reading: PowerReading): PowerReading {
+      reading.date = new Date(reading.date); // We're actually getting a string from the backend...
 
-  getHistory(name: string) {
-    return this.http.get<PowerReading[]>(`/api/device/power/history/${name}`)
-      .pipe(
-        map(readings => readings.map(reading => this.normalizeReading(name, reading)))
-      );
-  }
+      reading.power = roundToDigits(reading.power, 2);
+      reading.voltage = roundToDigits(reading.voltage, 2);
+      reading.amperage = roundToDigits(reading.amperage, 2);
 
-  private normalizeReading(name: string, reading: PowerReading): PowerReading {
-    reading.date = new Date(reading.date); // We're actually getting a string from the backend...
-
-    reading.power = roundToDigits(reading.power, 2);
-    reading.voltage = roundToDigits(reading.voltage, 2);
-    reading.amperage = roundToDigits(reading.amperage, 2);
-
-    return reading;
+      return reading;
   }
 }
 

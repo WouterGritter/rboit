@@ -1,34 +1,17 @@
 import { Injectable } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {map} from "rxjs";
 import {roundToDigits} from "../../helpers/mathHelpers";
+import {AbstractDeviceService, DeviceClass} from "./abstract-device.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class TemperatureDeviceService {
+export class TemperatureDeviceService extends AbstractDeviceService<TemperatureReading> {
 
-  constructor(private http: HttpClient) { }
-
-  getNames() {
-    return this.http.get<string[]>('/api/device/temperature/names');
+  override getDeviceClass(): DeviceClass {
+    return 'temperature';
   }
 
-  getReading(name: string) {
-    return this.http.get<TemperatureReading>(`/api/device/temperature/reading/${name}`)
-      .pipe(
-        map(reading => this.normalizeReading(reading))
-      );
-  }
-
-  getHistory(name: string) {
-    return this.http.get<TemperatureReading[]>(`/api/device/temperature/history/${name}`)
-      .pipe(
-        map(readings => readings.map(reading => this.normalizeReading(reading)))
-      );
-  }
-
-  private normalizeReading(reading: TemperatureReading): TemperatureReading {
+  override normalizeReading(reading: TemperatureReading): TemperatureReading {
     reading.date = new Date(reading.date); // We're actually getting a string from the backend...
 
     reading.temperature = roundToDigits(reading.temperature, 2);
