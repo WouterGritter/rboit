@@ -47,12 +47,12 @@ export class DeviceController {
 
         let history = device.history;
 
-        const start = new Date(req.params.startDate);
+        const start = new Date(req.query.startDate as string | undefined);
         if (!isNaN(start.getTime())) {
             history = history.filter(x => x.date > start);
         }
 
-        const end = new Date(req.params.endDate);
+        const end = new Date(req.query.endDate as string | undefined);
         if (!isNaN(end.getTime())) {
             history = history.filter(x => x.date < end);
         }
