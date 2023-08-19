@@ -46,6 +46,13 @@ export class DeviceController {
         }
 
         let history = device.history;
+
+        let start = new Date(req.params.startDate);
+        let end = new Date(req.params.endDate);
+        if (!isNaN(start.getTime()) && !isNaN(end.getTime())) {
+            history = history.filter(x => x.date > start && x.date < end);
+        }
+
         res.send(history);
     }
 

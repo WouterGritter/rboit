@@ -1,11 +1,11 @@
-import {Device, DeviceType} from "./device";
+import {Device, DeviceReading, DeviceType} from "./device";
 import {onDeviceError} from "../deviceErrorMonitor";
 import {DeferredPromise} from "../../util/deferredPromise";
 
 const DEVICE_CACHE_MAX_AGE = parseInt(process.env.DEVICE_CACHE_MAX_AGE);
 console.log(`DEVICE_CACHE_MAX_AGE=${DEVICE_CACHE_MAX_AGE}`);
 
-export abstract class CachedDevice<T> implements Device<T> {
+export abstract class CachedDevice<T extends DeviceReading> implements Device<T> {
     readonly abstract history: T[];
     readonly abstract name: string;
     readonly abstract type: DeviceType;
