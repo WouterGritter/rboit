@@ -6,6 +6,7 @@ import {
 import {Observable} from "rxjs";
 import {IsHandsetService} from "../is-handset.service";
 import {KeyOfType} from "../helpers/keyOfType";
+import {AbstractDeviceService} from "./service/abstract-device.service";
 
 @Component({
   template: ''
@@ -29,7 +30,7 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
     axisY2: undefined,
   }
 
-  abstract getDeviceService(): GenericDeviceService<Reading>;
+  abstract getDeviceService(): AbstractDeviceService<Reading>;
   abstract getHistoryConfigService(): DeviceHistoryConfigService;
   abstract getIsHandsetService(): IsHandsetService;
   abstract parseReadings(name: string, history: Reading[], lastReading: Reading | undefined): ChartData;
@@ -40,8 +41,7 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
       this.updateIntervalId = setInterval(() => this.updateReading(), this.historyConfig.clientHistoryIntervalMs);
     });
 
-    this.initializeHistory()
-      .then(() => this.updateReading());
+    this.initializeHistory();
 
     this.getHistoryConfigService().getLocalHistoryLength()
       .subscribe(() => this.renderChart());
@@ -82,16 +82,12 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
       });
   }
 
-  private initializeHistory(): Promise<void> {
-    return new Promise<void>(resolve => {
-      this.getDeviceService().getHistory(this.name)
-        .subscribe(historyReadings => {
-          this.historyReadings = historyReadings;
-          this.renderChart();
-
-          resolve();
-        });
-    });
+  private initializeHistory() {
+    this.getDeviceService().getHistory(this.name)
+      .subscribe(historyReadings => {
+        this.historyReadings = historyReadings;
+        this.renderChart();
+      });
   }
 
   private renderChart() {
@@ -204,8 +200,3 @@ declare type GenericReading = {
   date: Date;
   [key: string]: any;
 };
-
-declare interface GenericDeviceService<Reading extends GenericReading> {
-  getHistory(deviceName: string): Observable<Reading[]>;
-  getReading(deviceName: string): Observable<Reading>;
-}
