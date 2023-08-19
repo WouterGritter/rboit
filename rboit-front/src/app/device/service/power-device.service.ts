@@ -7,9 +7,7 @@ import {AbstractDeviceService, DeviceClass} from "./abstract-device.service";
 })
 export class PowerDeviceService extends AbstractDeviceService<PowerReading> {
 
-  override getDeviceClass(): DeviceClass {
-    return 'power';
-  }
+  readonly deviceClass: DeviceClass = 'power';
 
   override normalizeReading(reading: PowerReading): PowerReading {
       reading.date = new Date(reading.date); // We're actually getting a string from the backend...

@@ -7,9 +7,7 @@ import {AbstractDeviceService, DeviceClass} from "./abstract-device.service";
 })
 export class TemperatureDeviceService extends AbstractDeviceService<TemperatureReading> {
 
-  override getDeviceClass(): DeviceClass {
-    return 'temperature';
-  }
+  readonly deviceClass: DeviceClass = 'temperature';
 
   override normalizeReading(reading: TemperatureReading): TemperatureReading {
     reading.date = new Date(reading.date); // We're actually getting a string from the backend...

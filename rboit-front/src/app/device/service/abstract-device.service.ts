@@ -8,27 +8,27 @@ import {roundToDigits} from "../../helpers/mathHelpers";
 })
 export abstract class AbstractDeviceService<Reading> {
 
+  abstract readonly deviceClass: DeviceClass;
+
   protected constructor(private http: HttpClient) { }
 
   getNames(): Observable<string[]> {
-    return this.http.get<string[]>(`/api/device/${this.getDeviceClass()}/names`);
+    return this.http.get<string[]>(`/api/device/${this.deviceClass}/names`);
   }
 
   getReading(name: string): Observable<Reading> {
-    return this.http.get<Reading>(`/api/device/${this.getDeviceClass()}/reading/${name}`)
+    return this.http.get<Reading>(`/api/device/${this.deviceClass}/reading/${name}`)
       .pipe(
         map(reading => this.normalizeReading(reading))
       );
   }
 
   getHistory(name: string): Observable<Reading[]> {
-    return this.http.get<Reading[]>(`/api/device/${this.getDeviceClass()}/history/${name}`)
+    return this.http.get<Reading[]>(`/api/device/${this.deviceClass}/history/${name}`)
       .pipe(
         map(readings => readings.map(reading => this.normalizeReading(reading)))
       );
   }
-
-  abstract getDeviceClass(): DeviceClass;
 
   abstract normalizeReading(reading: Reading): Reading;
 }
