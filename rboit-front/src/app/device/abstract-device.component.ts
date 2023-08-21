@@ -83,7 +83,7 @@ export abstract class AbstractDeviceComponent<Reading extends GenericReading> im
   }
 
   private initializeHistory() {
-    this.getDeviceService().getHistory(this.name)
+    this.getDeviceService().getHistoryInChunks(this.name)
       .subscribe(historyReadings => {
         this.historyReadings = historyReadings;
         this.renderChart();
