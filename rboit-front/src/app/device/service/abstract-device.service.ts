@@ -83,7 +83,11 @@ class HistoryChunkFetcher<Reading extends DatedReading> {
     const start = this.dateChunks[index];
     const end = this.dateChunks[index + 1];
 
-    this.service.getHistoryBetween(this.deviceName, start, end).subscribe(partialHistory => {
+    this.service.getHistoryBetween(this.deviceName, start, end).toPromise().then(partialHistory => {
+      if (partialHistory === undefined) {
+        return;
+      }
+
       const totalHistory = this.totalHistorySubject.value.concat(partialHistory);
       totalHistory.sort((a, b) => a.date.getTime() - b.date.getTime());
       this.totalHistorySubject.next(totalHistory);
