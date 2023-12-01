@@ -24,22 +24,19 @@ export class TapoPowerDevice extends CachedDevice<PowerReading> {
 
     private toPowerReading(reading: TapoPowerReading): PowerReading {
         return {
-            date: new Date(reading.result.local_time),
-            power: reading.result.current_power / 1000.0,
+            date: new Date(reading.local_time),
+            power: reading.current_power / 1000.0,
             source: reading,
         }
     }
 }
 
 export declare type TapoPowerReading = {
-    error_code: number;
-    result: {
-        current_power: number;
-        electricity_charge: any;
-        local_time: string;
-        month_energy: number;
-        month_runtime: number;
-        today_energy: number;
-        today_runtime: number;
-    };
+    current_power: number;
+    electricity_charge: any;
+    local_time: string;
+    month_energy: number;
+    month_runtime: number;
+    today_energy: number;
+    today_runtime: number;
 };
