@@ -8,7 +8,7 @@ export class AndledonSmartMeterPowerDevice extends CachedDevice<PowerReading> {
     readonly type: DeviceType = 'power';
 
     async getActualReading(): Promise<PowerReading> {
-        return fetch('http://10.43.0.10:8080/')
+        return fetch('http://10.43.70.132:8080/')
             .then(response => response.json() as Promise<AndledonSmartMeterReading>)
             .then(readings => this.toPowerReading(readings));
     }

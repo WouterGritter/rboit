@@ -1,5 +1,8 @@
 FROM python:3.11-slim-buster
 
+RUN apt update
+RUN apt install -y git
+
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
