@@ -23,10 +23,6 @@ export class TapoPowerDevice extends CachedDevice<PowerReading> {
     }
 
     private toPowerReading(reading: TapoPowerReading): PowerReading {
-        if (reading.error_code !== 0) {
-            throw new Error(`Received TAPO error code ${reading.error_code}`);
-        }
-
         return {
             date: new Date(reading.result.local_time),
             power: reading.result.current_power / 1000.0,
