@@ -12,12 +12,15 @@ services:
 
   python-daemon:
     build: './python-daemon'
-    env_file: '.env'
     restart: unless-stopped
+    environment:
+      TP_LINK_EMAIL: ${TP_LINK_EMAIL}
+      TP_LINK_PASSWORD: ${TP_LINK_PASSWORD}
+      GOODWE_EMAIL: ${GOODWE_EMAIL}
+      GOODWE_PASSWORD: ${GOODWE_PASSWORD}
 
   rboit-back:
     build: './rboit-back'
-    env_file: '.env'
     environment:
       TZ: 'Europe/Amsterdam'
       PYTHON_DAEMON: 'http://python-daemon/'
@@ -29,6 +32,12 @@ services:
       DEVICE_HISTORY_INTERVAL: '10000'
       CLIENT_HISTORY_INTERVAL: '1000'
       STORE_HISTORY: 'true'
+      DISCORD_ID: ${DISCORD_ID}
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      HUE_HUB_ADDRESS: ${HUE_HUB_ADDRESS}
+      HUE_USERNAME: ${HUE_USERNAME}
+      HUE_CLIENT_KEY: ${HUE_CLIENT_KEY}
+      OPENAI_API_KEYL: ${OPENAI_API_KEY}
     restart: unless-stopped
     ports:
       - '8081:80'
