@@ -24,8 +24,8 @@ services:
     environment:
       TZ: 'Europe/Amsterdam'
       PYTHON_DAEMON: 'http://python-daemon/'
-      GOVEE_DAEMON: 'http://10.43.60.2:8069/'
-      DTS353F_DAEMON: 'http://10.43.60.2:8096/'
+      GOVEE_DAEMON: 'http://${PI_HOST}:8069/'
+      DTS353F_DAEMON: 'http://${PI_HOST}:8096/'
       REDIS_URL: 'redis://redis/'
       DEVICE_CACHE_MAX_AGE: '900'
       DEVICE_HISTORY_LENGTH: '86400000'  # 24 hours
