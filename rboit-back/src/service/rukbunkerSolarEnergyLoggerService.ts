@@ -4,7 +4,6 @@ import {RukbunkerSolarPowerDevice, RukbunkerSolarReading} from "../device/device
 import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask, withDelay} from "./scheduledTask";
-import {Configuration, OpenAIApi} from "openai";
 import {KWH_PRICE} from "../constants";
 
 export class RukbunkerSolarEnergyLoggerService extends Service {
@@ -38,29 +37,7 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
                 message = ':sunny: Could not measure the Rukbunker generation today, most likely due to the inverter experiencing a power loss... :(';
             } else {
                 const savings = state.wattHoursToday / 1000 * state.currentKwhPrice;
-
-                const openai = new OpenAIApi(new Configuration({
-                    apiKey: process.env.OPENAI_API_KEY,
-                }));
-
-                const completion = await openai.createChatCompletion({
-                    model: 'gpt-3.5-turbo',
-                    messages: [
-                        {
-                            role: 'system',
-                            content: 'You are a helpful, drunk assistant. Follow the user\'s request carefully. You are drunk so you will slur your words. Make sure to slur your words because you are drunk. Don\'t forget to slur your words. Keep slurring your words.'
-                        },
-                        {
-                            role: 'user',
-                            content: `Generate a message to tell the user how much energy their solar system has generated. It generated ${state.wattHoursToday} Wh (which is ${savings.toFixed(2)} euro). Only respond with the message and nothing else (also no quotes at the beginning and end). You are drunk so you will slur your words. Make sure to slur your words because you are drunk. Don't forget to slur your words. Keep slurring your words.`
-                        }
-                    ],
-                });
-
-                const text = completion.data.choices[0].message.content;
-
-                // message = `:sunny: Rukbunker generation today: \`${state.wattHoursToday} Wh\` / \`€${savings.toFixed(2)}\``;
-                message = `:sunny: ${text}`;
+                message = `:sunny: Rukbunker generation today: \`${state.wattHoursToday} Wh\` / \`€${savings.toFixed(2)}\``;
             }
 
             await discordClient.send(message);
