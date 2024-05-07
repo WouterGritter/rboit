@@ -37,7 +37,6 @@ services:
       HUE_HUB_ADDRESS: ${HUE_HUB_ADDRESS}
       HUE_USERNAME: ${HUE_USERNAME}
       HUE_CLIENT_KEY: ${HUE_CLIENT_KEY}
-      OPENAI_API_KEYL: ${OPENAI_API_KEY}
     restart: unless-stopped
     ports:
       - '8081:80'
