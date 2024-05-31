@@ -1,43 +1,35 @@
-import {CachedDevice} from "../cachedDevice";
 import {TemperatureReading} from "./temperatureReading";
 import {DeviceType} from "../device";
+import {MqttDevice, MqttValues} from "../mqttDevice";
+import {MqttManager} from "../../../mqttManager";
 
-export class GoveeTemperatureDevice extends CachedDevice<TemperatureReading> {
+export class GoveeTemperatureDevice extends MqttDevice<TemperatureReading> {
     readonly history: TemperatureReading[] = [];
-
     readonly name: string;
     readonly type: DeviceType = 'temperature';
 
-    private readonly address: string;
+    private readonly address;
 
-    constructor(name: string, address: string) {
-        super();
+    constructor(mqttManager: MqttManager, name: string, address: string) {
+        super(
+            mqttManager,
+            [
+                `govee/${address}/temperature`,
+                `govee/${address}/humidity`,
+                `govee/${address}/battery`,
+            ],
+        );
 
         this.name = name;
         this.address = address;
     }
 
-    getActualReading(): Promise<TemperatureReading> {
-        return fetch(`${process.env.GOVEE_DAEMON}/${this.address}`)
-            .then(response => response.json() as Promise<GoveeTemperatureReading>)
-            .then(reading => this.toTemperatureReading(reading));
-    }
-
-    private toTemperatureReading(reading: GoveeTemperatureReading): TemperatureReading {
+    translateReading(values: MqttValues, date: Date): TemperatureReading {
         return {
-            date: new Date(reading.epochTime),
-            temperature: reading.temperature,
-            humidity: reading.humidity,
-            source: reading,
+            date: date,
+            temperature: values.get('.*/temperature'),
+            humidity: values.get('.*/humidity'),
+            source: values,
         };
     }
 }
-
-export declare type GoveeTemperatureReading = {
-    epochTime: number;
-    address: string;
-    name: string;
-    temperature: number;
-    humidity: number;
-    battery: number;
-};

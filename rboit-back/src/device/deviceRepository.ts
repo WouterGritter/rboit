@@ -24,12 +24,12 @@ class DeviceRepository {
     private readonly devices: Device<any>[] = [];
 
     constructor() {
-        const mqttManager = new MqttManager(process.env.MQTT_BROKER);
+        const mqtt = new MqttManager(process.env.MQTT_BROKER);
 
         // Power devices
         this.devices.push(new AndledonSmartMeterPowerDevice());
         // this.devices.push(new GoodwePowerDevice('solar', 'fbe5497e-f3e3-4267-978e-0e486028949e'));
-        this.devices.push(new RukbunkerSolarPowerDevice(mqttManager));
+        this.devices.push(new RukbunkerSolarPowerDevice(mqtt));
         this.devices.push(new TapoPowerDevice('rb-tv', '10.43.60.72'));
         this.devices.push(new DaikinPowerDevice('rb-ac', '10.43.60.6'));
         this.devices.push(new TapoPowerDevice('rb-kachel-slaapkamer', '10.43.60.70'));
@@ -41,9 +41,9 @@ class DeviceRepository {
 
         // Temperature devices
         this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.4'));
-        this.devices.push(new GoveeTemperatureDevice('rb-temp-woonkamer', 'A4:C1:38:10:4F:D9'));
-        this.devices.push(new GoveeTemperatureDevice('rb-temp-slaapkamer', 'A4:C1:38:D5:D9:2C'));
-        this.devices.push(new GoveeTemperatureDevice('rb-temp-server-room', 'A4:C1:38:45:74:7B'));
+        this.devices.push(new GoveeTemperatureDevice(mqtt,'rb-temp-woonkamer', 'A4:C1:38:10:4F:D9'));
+        this.devices.push(new GoveeTemperatureDevice(mqtt, 'rb-temp-slaapkamer', 'A4:C1:38:D5:D9:2C'));
+        this.devices.push(new GoveeTemperatureDevice(mqtt, 'rb-temp-server-room', 'A4:C1:38:45:74:7B'));
         this.devices.push(new DaikinOutdoorTemperatureDevice('rb-temp-outdoor', '10.43.60.6'));
         // this.devices.push(new BroedmachineTemperatureDevice('broedmachine-temp', '10.43.60.11'));
 

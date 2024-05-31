@@ -1,6 +1,7 @@
 import {Device, DeviceReading, DeviceType} from "./device";
 import {DeferredPromise} from "../../util/deferredPromise";
 import {MqttManager} from "../../mqttManager";
+import {RegexMap} from "../../util/regexMap";
 
 export abstract class MqttDevice<T extends DeviceReading> implements Device<T> {
 
@@ -13,7 +14,7 @@ export abstract class MqttDevice<T extends DeviceReading> implements Device<T> {
     private readonly topics: string[];
 
     private latestDate: Date | undefined = undefined;
-    private values: MqttTopicValues = {};
+    private values: MqttValues = new RegexMap();
 
     constructor(mqttManager: MqttManager, topics: string[]) {
         this.topics = topics;
@@ -25,7 +26,7 @@ export abstract class MqttDevice<T extends DeviceReading> implements Device<T> {
 
     private mqttCallback(topic: string, payload: string) {
         this.latestDate = new Date();
-        this.values[topic] = payload;
+        this.values.set(topic, this.parsePayload(payload));
 
         if (this.readyPromises !== undefined && this.isReady()) {
             this.readyPromises.forEach(deferred => deferred.resolve(this.name));
@@ -33,7 +34,15 @@ export abstract class MqttDevice<T extends DeviceReading> implements Device<T> {
         }
     }
 
-    abstract translateReading(values: MqttTopicValues, date: Date): T;
+    private parsePayload(payload: string): any {
+        try {
+            return JSON.parse(payload);
+        } catch (e) {
+            return payload;
+        }
+    }
+
+    abstract translateReading(values: MqttValues, date: Date): T;
 
     getReading(): Promise<T> {
         if (!this.isReady()) {
@@ -50,7 +59,7 @@ export abstract class MqttDevice<T extends DeviceReading> implements Device<T> {
         }
 
         for (const topic of this.topics) {
-            if (this.values[topic] === undefined) {
+            if (this.values.getExact(topic) === undefined) {
                 return false;
             }
         }
@@ -73,4 +82,4 @@ export abstract class MqttDevice<T extends DeviceReading> implements Device<T> {
     }
 }
 
-export declare type MqttTopicValues = { [key: string]: string; };
+export declare type MqttValues = RegexMap<any>;

@@ -5,7 +5,7 @@ import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask, withDelay} from "./scheduledTask";
 import {KWH_PRICE} from "../constants";
-import {MqttTopicValues} from "../device/device/mqttDevice";
+import {MqttValues} from "../device/device/mqttDevice";
 
 export class RukbunkerSolarEnergyLoggerService extends Service {
     private wasGenerating: boolean;
@@ -51,7 +51,7 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
         const device = DEVICE_REPOSITORY.findDevice('rb-solar', 'power') as RukbunkerSolarPowerDevice;
         const reading = await device.getReading();
 
-        const wattHours = parseFloat((reading.source as MqttTopicValues)['rb-solar/energy']);
+        const wattHours = (reading.source as MqttValues).get('rb-solar/energy');
 
         return {
             isGenerating: reading.power !== 0,
