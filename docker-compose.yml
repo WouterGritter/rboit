@@ -24,7 +24,6 @@ services:
     environment:
       TZ: 'Europe/Amsterdam'
       PYTHON_DAEMON: 'http://python-daemon/'
-      DTS353F_DAEMON: 'http://${PI_HOST}:8096/'
       REDIS_URL: 'redis://redis/'
       MQTT_BROKER: ${MQTT_BROKER}
       DEVICE_CACHE_MAX_AGE: '900'

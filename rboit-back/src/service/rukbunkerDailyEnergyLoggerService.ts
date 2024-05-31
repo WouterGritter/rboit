@@ -2,9 +2,10 @@ import {DEVICE_REPOSITORY} from "../device/deviceRepository";
 import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask} from "./scheduledTask";
-import {DTS353FReading, RukbunkerSmartMeterPowerDevice} from "../device/device/power/rukbunkerSmartMeterPowerDevice";
+import {RukbunkerSmartMeterPowerDevice} from "../device/device/power/rukbunkerSmartMeterPowerDevice";
 import {discordClient} from "../discordClient";
 import {KWH_PRICE} from "../constants";
+import {MqttValues} from "../device/device/mqttDevice";
 
 export class RukbunkerDailyEnergyLoggerService extends Service {
 
@@ -26,8 +27,8 @@ export class RukbunkerDailyEnergyLoggerService extends Service {
         const lastReading = await this.getLastReading();
         await this.setLastReading(currentReading);
 
-        const delivery = currentReading.energy.delivery - lastReading.energy.delivery;
-        const redelivery = currentReading.energy.redelivery - lastReading.energy.redelivery;
+        const delivery = currentReading.delivery - lastReading.delivery;
+        const redelivery = currentReading.redelivery - lastReading.redelivery;
         const total = delivery - redelivery;
 
         const message = `:zap: Rukbunker energy usage today
@@ -38,17 +39,31 @@ export class RukbunkerDailyEnergyLoggerService extends Service {
         await discordClient.send(message);
     }
 
-    public async getSmartReading(): Promise<DTS353FReading> {
+    public async getSmartReading(): Promise<EnergySnapshot> {
         const device = DEVICE_REPOSITORY.findDevice('rb-smart-meter', 'power') as RukbunkerSmartMeterPowerDevice;
-        const reading = await device.getReading();
-        return reading.source as DTS353FReading;
+        const reading = (await device.getReading()).source as MqttValues;
+
+        return {
+            delivery: reading.get('.*/energy/delivery'),
+            redelivery: reading.get('.*/energy/redelivery'),
+        }
     }
 
-    private async getLastReading(): Promise<DTS353FReading | undefined> {
-        return await redisGet<DTS353FReading>('rb-total-last-reading');
+    private async getLastReading(): Promise<EnergySnapshot | undefined> {
+        const reading = await redisGet<EnergySnapshot>('rb-total-last-reading');
+        if (!reading || !reading.delivery || !reading.redelivery) {
+            return undefined;
+        }
+
+        return reading;
     }
 
-    private async setLastReading(value: DTS353FReading): Promise<void> {
-        await redisSet<DTS353FReading>('rb-total-last-reading', value);
+    private async setLastReading(value: EnergySnapshot): Promise<void> {
+        await redisSet<EnergySnapshot>('rb-total-last-reading', value);
     }
+}
+
+declare type EnergySnapshot = {
+    delivery: number;
+    redelivery: number;
 }

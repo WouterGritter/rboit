@@ -36,7 +36,7 @@ class DeviceRepository {
         this.devices.push(new TapoPowerDevice('rb-boiler', '10.43.60.69'));
         this.devices.push(new TapoPowerDevice('rb-slaapkamer-bureau', '10.43.60.78'));
         this.devices.push(new TapoPowerDevice('server-rack', '10.43.60.112'));
-        this.devices.push(new RukbunkerSmartMeterPowerDevice());
+        this.devices.push(new RukbunkerSmartMeterPowerDevice(mqtt));
         this.devices.push(new HuePowerDevice());
 
         // Temperature devices
