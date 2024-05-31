@@ -52,7 +52,7 @@ export abstract class CachedDevice<T extends DeviceReading> implements Device<T>
             return Promise.resolve<string>(this.name);
         } else {
             if (this.readyPromises === undefined) {
-                throw new Error(`Device ${this.name} is ready, but this.readyPromises is undefined.`);
+                throw new Error(`Device ${this.name} not is ready, but this.readyPromises is undefined.`);
             }
 
             const deferred = new DeferredPromise<string>();
