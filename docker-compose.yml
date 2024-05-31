@@ -27,6 +27,7 @@ services:
       GOVEE_DAEMON: 'http://${PI_HOST}:8069/'
       DTS353F_DAEMON: 'http://${PI_HOST}:8096/'
       REDIS_URL: 'redis://redis/'
+      MQTT_BROKER: ${MQTT_BROKER}
       DEVICE_CACHE_MAX_AGE: '900'
       DEVICE_HISTORY_LENGTH: '86400000'  # 24 hours
       DEVICE_HISTORY_INTERVAL: '10000'

@@ -11,6 +11,7 @@ import {RukbunkerSmartMeterPowerDevice} from "./device/power/rukbunkerSmartMeter
 import {DaikinPowerDevice} from "./device/power/daikinPowerDevice";
 import {HuePowerDevice} from "./device/power/huePowerDevice";
 import {BroedmachineTemperatureDevice} from "./device/temperature/broedmachineTemperatureDevice";
+import {MqttManager} from "../mqttManager";
 
 class DeviceRepository {
 
@@ -23,10 +24,12 @@ class DeviceRepository {
     private readonly devices: Device<any>[] = [];
 
     constructor() {
+        const mqttManager = new MqttManager(process.env.MQTT_BROKER);
+
         // Power devices
         this.devices.push(new AndledonSmartMeterPowerDevice());
         // this.devices.push(new GoodwePowerDevice('solar', 'fbe5497e-f3e3-4267-978e-0e486028949e'));
-        this.devices.push(new RukbunkerSolarPowerDevice());
+        this.devices.push(new RukbunkerSolarPowerDevice(mqttManager));
         this.devices.push(new TapoPowerDevice('rb-tv', '10.43.60.72'));
         this.devices.push(new DaikinPowerDevice('rb-ac', '10.43.60.6'));
         this.devices.push(new TapoPowerDevice('rb-kachel-slaapkamer', '10.43.60.70'));

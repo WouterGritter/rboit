@@ -1,17 +1,17 @@
 import {AndledonSmartMeterReading} from "./andledonSmartMeterPowerDevice";
 import {GoodwePowerReading} from "./goodwePowerDevice";
-import {RukbunkerSolarReading} from "./rukbunkerSolarPowerDevice";
 import {TapoPowerReading} from "./tapoPowerDevice";
 import {DTS353FReading} from "./rukbunkerSmartMeterPowerDevice";
 import {DaikinGetDayPowerEx} from "../../../daikinDevice/daikinResponseTypes";
 import {HueSystemState} from "./huePowerDevice";
+import {MqttTopicValues} from "../mqttDevice";
 
 export declare type PowerReading = PowerReadingValues & {
     date: Date;
     L1?: PowerReadingValues;
     L2?: PowerReadingValues;
     L3?: PowerReadingValues;
-    source: AndledonSmartMeterReading | GoodwePowerReading | RukbunkerSolarReading | TapoPowerReading | DTS353FReading | DaikinGetDayPowerEx | HueSystemState;
+    source: AndledonSmartMeterReading | GoodwePowerReading | TapoPowerReading | DTS353FReading | DaikinGetDayPowerEx | HueSystemState | MqttTopicValues;
 };
 
 export declare type PowerReadingValues = {

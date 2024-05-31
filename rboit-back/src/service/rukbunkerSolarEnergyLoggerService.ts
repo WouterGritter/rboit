@@ -1,10 +1,11 @@
 import {DEVICE_REPOSITORY} from "../device/deviceRepository";
 import {discordClient} from "../discordClient";
-import {RukbunkerSolarPowerDevice, RukbunkerSolarReading} from "../device/device/power/rukbunkerSolarPowerDevice";
+import {RukbunkerSolarPowerDevice} from "../device/device/power/rukbunkerSolarPowerDevice";
 import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask, withDelay} from "./scheduledTask";
 import {KWH_PRICE} from "../constants";
+import {MqttTopicValues} from "../device/device/mqttDevice";
 
 export class RukbunkerSolarEnergyLoggerService extends Service {
     private wasGenerating: boolean;
@@ -49,13 +50,14 @@ export class RukbunkerSolarEnergyLoggerService extends Service {
     public async getSolarState(): Promise<SolarState> {
         const device = DEVICE_REPOSITORY.findDevice('rb-solar', 'power') as RukbunkerSolarPowerDevice;
         const reading = await device.getReading();
-        const solarReading = reading.source as RukbunkerSolarReading;
+
+        const wattHours = parseFloat((reading.source as MqttTopicValues)['rb-solar/energy']);
 
         return {
             isGenerating: reading.power !== 0,
             currentPower: Math.round(Math.abs(reading.power) * 10) / 10,
-            wattHoursTotal: solarReading.wattHours,
-            wattHoursToday: solarReading.wattHours - (await this.getLastWattHours() ?? 0),
+            wattHoursTotal: wattHours,
+            wattHoursToday: wattHours - (await this.getLastWattHours() ?? 0),
             wattHoursYesterday: await this.getGenerationYesterday() ?? 0,
             currentKwhPrice: KWH_PRICE,
         };

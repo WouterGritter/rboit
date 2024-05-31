@@ -17,6 +17,7 @@
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "http-proxy-middleware": "^2.0.6",
+    "mqtt": "^5.7.0",
     "node-hue-api": "^5.0.0-beta.15",
     "redis": "^4.5.1",
     "request": "^2.88.2"
