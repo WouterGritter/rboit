@@ -93,6 +93,9 @@ export class HuePowerDevice extends CachedDevice<PowerReading> {
             // Smart plug
             if (light.name === 'Zoutlamp') {
                 return 3.1;
+            } else {
+                // Unknown smart plug
+                return 0;
             }
         }
 
