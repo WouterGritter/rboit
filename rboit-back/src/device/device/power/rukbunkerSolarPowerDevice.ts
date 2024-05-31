@@ -15,7 +15,7 @@ export class RukbunkerSolarPowerDevice extends MqttDevice<PowerReading> {
     translateReading(values: MqttTopicValues, date: Date): PowerReading {
         return {
             date: date,
-            power: parseFloat(values['rb-solar/power']),
+            power: -parseFloat(values['rb-solar/power']),
             source: values,
         };
     }
