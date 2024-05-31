@@ -18,8 +18,11 @@ export class HuePowerDevice extends CachedDevice<PowerReading> {
             .then(hub => {
                 this.hub = hub;
                 console.log('Connected to hue hub.');
+            })
+            .catch(err => {
+                console.log('Error while connecting to hue hub.');
+                console.log(err);
             });
-
     }
 
     async getActualReading(): Promise<PowerReading> {
