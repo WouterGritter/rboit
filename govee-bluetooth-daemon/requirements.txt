@@ -1,3 +1,0 @@
-Flask~=2.2.2
-bleson~=0.1.8
-python-dotenv~=0.21.1
