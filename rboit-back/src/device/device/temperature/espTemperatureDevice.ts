@@ -1,39 +1,30 @@
 import {TemperatureReading} from "./temperatureReading";
-import {CachedDevice} from "../cachedDevice";
 import {DeviceType} from "../device";
+import {MqttDevice, MqttValues} from "../mqttDevice";
+import {MqttManager} from "../../../mqttManager";
 
-export class EspTemperatureDevice extends CachedDevice<TemperatureReading> {
+const TOPIC_PREFIX = 'esp-temp-sensor';
+
+export class EspTemperatureDevice extends MqttDevice<TemperatureReading> {
     readonly history: TemperatureReading[] = [];
     readonly name: string;
     readonly type: DeviceType = 'temperature';
 
-    private readonly address: string;
-
-    constructor(name: string, address: string) {
-        super();
+    constructor(mqttManager: MqttManager, name: string, id: string) {
+        super(mqttManager, [
+            `${TOPIC_PREFIX}/${id}/temperature`,
+            `${TOPIC_PREFIX}/${id}/humidity`,
+        ]);
 
         this.name = name;
-        this.address = address;
     }
 
-    getActualReading(): Promise<TemperatureReading> {
-        return fetch(`http://${this.address}/`)
-            .then(response => response.json() as Promise<EspTemperatureReading>)
-            .then(reading => this.toTemperatureReading(reading));
-    }
-
-    private toTemperatureReading(reading: EspTemperatureReading): TemperatureReading {
+    translateReading(values: MqttValues, date: Date): TemperatureReading {
         return {
-            date: new Date(reading.epochTime * 1000),
-            temperature: reading.temperature,
-            humidity: reading.humidity,
-            source: reading,
+            date: date,
+            temperature: values.get('.*/temperature'),
+            humidity: values.get('.*/humidity'),
+            source: values
         };
     }
 }
-
-export type EspTemperatureReading = {
-    temperature: number;
-    humidity: number;
-    epochTime: number;
-};

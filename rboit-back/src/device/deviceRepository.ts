@@ -40,7 +40,7 @@ class DeviceRepository {
         this.devices.push(new HuePowerDevice());
 
         // Temperature devices
-        this.devices.push(new EspTemperatureDevice('papa-temp-sensor', '10.43.60.4'));
+        this.devices.push(new EspTemperatureDevice(mqtt,'papa-temp-sensor', '1'));
         this.devices.push(new GoveeTemperatureDevice(mqtt,'rb-temp-woonkamer', 'A4:C1:38:10:4F:D9'));
         this.devices.push(new GoveeTemperatureDevice(mqtt, 'rb-temp-slaapkamer', 'A4:C1:38:D5:D9:2C'));
         this.devices.push(new GoveeTemperatureDevice(mqtt, 'rb-temp-server-room', 'A4:C1:38:45:74:7B'));
