@@ -4,8 +4,9 @@ import {Service} from "./service";
 import {scheduleTask} from "./scheduledTask";
 import {RukbunkerSmartMeterPowerDevice} from "../device/device/power/rukbunkerSmartMeterPowerDevice";
 import {discordClient} from "../discordClient";
-import {KWH_PRICE} from "../constants";
 import {MqttValues} from "../device/device/mqttDevice";
+
+const KWH_PRICE = parseFloat(process.env.KWH_PRICE);
 
 export class RukbunkerDailyEnergyLoggerService extends Service {
 

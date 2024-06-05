@@ -36,6 +36,7 @@ services:
       HUE_HUB_ADDRESS: ${HUE_HUB_ADDRESS}
       HUE_USERNAME: ${HUE_USERNAME}
       HUE_CLIENT_KEY: ${HUE_CLIENT_KEY}
+      KWH_PRICE: ${KWH_PRICE}
     restart: unless-stopped
     ports:
       - '8081:80'

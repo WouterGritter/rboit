@@ -4,8 +4,9 @@ import {RukbunkerSolarPowerDevice} from "../device/device/power/rukbunkerSolarPo
 import {redisGet, redisSet} from "../redisClient";
 import {Service} from "./service";
 import {scheduleTask, withDelay} from "./scheduledTask";
-import {KWH_PRICE} from "../constants";
 import {MqttValues} from "../device/device/mqttDevice";
+
+const KWH_PRICE = parseFloat(process.env.KWH_PRICE);
 
 export class RukbunkerSolarEnergyLoggerService extends Service {
     private wasGenerating: boolean;
