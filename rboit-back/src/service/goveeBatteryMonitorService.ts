@@ -25,11 +25,12 @@ export class GoveeBatteryMonitorService extends Service {
         const devices = this.deviceNames.map(name => DEVICE_REPOSITORY.findDevice(name, 'temperature') as GoveeTemperatureDevice);
 
         for (let device of devices) {
-            let reading = await device.getReading();
-            let goveeReading = reading.source as MqttValues;
+            const reading = await device.getReading();
+            const goveeReading = reading.source as MqttValues;
+            const batteryPercentage = Math.round(goveeReading.get('.*/battery') * 100);
 
-            if (goveeReading.get('.*/battery') <= this.batteryThreshold) {
-                await discordClient.send(`:low_battery: Govee device ${device.name} has a low battery of ${goveeReading.get('.*/battery')}%!`);
+            if (batteryPercentage <= this.batteryThreshold) {
+                await discordClient.send(`:low_battery: Govee device ${device.name} has a low battery of ${batteryPercentage}%!`);
             }
         }
     }
